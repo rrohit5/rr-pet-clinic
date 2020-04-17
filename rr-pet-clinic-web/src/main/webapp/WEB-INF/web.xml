@@ -5,7 +5,8 @@
 	
 	<display-name>PetClinic</display-name>
 	
-	<servlet>
+	<!-- Removed from here. Added to C1_Init.java. To use java based config -->
+	<!-- <servlet>
 		<servlet-name>petclinincDispatcherServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -14,6 +15,6 @@
 	<servlet-mapping>
 		<servlet-name>petclinincDispatcherServlet</servlet-name>
 		<url-pattern>/</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping> -->
 	
 </web-app>

@@ -11,13 +11,16 @@
         http://www.springframework.org/schema/mvc  
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-	<context:component-scan	base-package="com.petclinic" />
+	<!-- Removed from here. Added to C2_WebConfig.java. To use java based config -->
+	<!-- <context:component-scan base-package="com.petclinic" /> 
 
 	<mvc:annotation-driven />
-	
-	  <bean class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
-      <property name = "prefix" value = "/WEB-INF/views/jsp/" />
-      <property name = "suffix" value = ".jsp" />
-   </bean>
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	-->
 
 </beans>  
