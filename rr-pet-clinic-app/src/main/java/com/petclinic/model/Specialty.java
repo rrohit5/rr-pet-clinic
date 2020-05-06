@@ -9,12 +9,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
+
 @Entity
 @Table(name = "specialties")
 public class Specialty extends BaseEntity {
