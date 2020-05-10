@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,92 +22,71 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 //@Builder
-@ToString
+//@ToString
 
 @Entity
 @Table(name = "pets")
 public class Pet extends BaseEntity {
-	
-	@Builder
-    public Pet(Long id, String name, PetType petType, Owner owner, LocalDate birthDate, Set<Visit> visits) {
-        super(id);
-        this.name = name;
-        this.petType = petType;
-        this.owner = owner;
-        this.birthDate = birthDate;
-       // this.visits = visits;
-        
-        if (visits == null || visits.size() > 0 ) {
-        	   this.visits = visits;
-        }
-    }
+
+	// @Builder
+	public Pet(Long id, String name, PetType petType, Owner owner, LocalDate birthDate, Set<Visit> visits) {
+		super(id);
+		this.name = name;
+		this.petType = petType;
+		this.owner = owner;
+		this.birthDate = birthDate;
+		// this.visits = visits;
+
+		if (visits == null || visits.size() > 0) {
+			this.visits = visits;
+		}
+	}
 
 	@Column(name = "name")
-    private String name;
+	private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id")
-    private PetType petType;
+	@ManyToOne/*(fetch = FetchType.LAZY)*/
+	@JoinColumn(name = "type_id")
+	private PetType petType;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private Owner owner;
+	@ManyToOne/*(fetch = FetchType.LAZY)*/
+	@JoinColumn(name = "owner_id")
+	private Owner owner;
 
-    @Column(name = "birth_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthDate;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
-    private Set<Visit> visits = new HashSet<>();
+	@Column(name = "birth_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate birthDate;
 
-    public void addVisit(Visit visit) {
-        getVisits().add(visit);
-        visit.setPet(this);
-    }
-    
-   /* public String getName() {
-        return name;
-    }
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet"/*, fetch = FetchType.LAZY*/)
+	private Set<Visit> visits = new HashSet<>();
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public PetType getPetType() {
-        return petType;
-    }
+	public Pet addVisit(Visit visit) {
+		
+		if(!this.visits.contains(visit)) {
+			
+			getVisits().add(visit);
+			visit.setPet(this);
+			
+		}
+		
 
-    public void setPetType(PetType petType) {
-        this.petType = petType;
-    }
+		return this;
+	}
+	
+	public void setOwner(Owner owner) {
+		
+		this.owner = owner;
+		
+		if(owner != null && !(owner.getPets().contains(this))) {
+			owner.getPets().add(this);
+		}
+		
+	}
 
-    public Owner getOwner() {
-        return owner;
-    }
 
-    public void setOwner(Owner owner) {
-        this.owner = owner;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-    
-    public Set<Visit> getVists() {
-        return vists;
-    }
-
-    public void setVists(Set<Visit> vists) {
-        this.vists = vists;
-    }*/
 }

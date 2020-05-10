@@ -56,24 +56,28 @@ class VisitControllerTest {
 
     @BeforeEach
     void setUp() {
+    	
         Long petId = 1L;
         Long ownerId = 1L;
+        
+        Owner owner = new Owner();
+        owner.setId(ownerId);
+        owner.setLastName("Doe");
+        owner.setFirstName("Joe");
+        
+        PetType type = new PetType();
+        type.setName("Dog");
+        
+        Pet pet = new Pet();
+        pet.setId(petId);
+        pet.setBirthDate(LocalDate.of(2018,11,13));
+        pet.setName("Cutie");
+        pet.setVisits(new HashSet<>());
+        pet.setOwner(owner);
+        pet.setPetType(type);
+        
         when(petService.findById(anyLong()))
-                .thenReturn(
-                        Pet.builder()
-                            .id(petId)
-                            .birthDate(LocalDate.of(2018,11,13))
-                            .name("Cutie")
-                            .visits(new HashSet<>())
-                            .owner(Owner.builder()
-                                .id(ownerId)
-                                .lastName("Doe")
-                                .firstName("Joe")
-                                .build())
-                            .petType(PetType.builder()
-                                    .name("Dog").build())
-                            .build()
-                );
+                .thenReturn(pet);
 
         uriVariables.clear();
         uriVariables.put("ownerId", ownerId.toString());

@@ -52,11 +52,22 @@ class PetControllerTest {
 
     @BeforeEach
     void setUp() {
-        owner = Owner.builder().id(1l).build();
+    	
+        owner = new Owner();
+        owner.setId(1l);
+        
+        PetType pet = new PetType();
+        pet.setId(1L);
+        pet.setName("Dog");
+        
+        PetType pet2 = new PetType();
+        pet2.setId(2L);
+        pet2.setName("Cat");
+        
 
         petTypes = new HashSet<>();
-        petTypes.add(PetType.builder().id(1L).name("Dog").build());
-        petTypes.add(PetType.builder().id(2L).name("Cat").build());
+        petTypes.add(pet);
+        petTypes.add(pet2);
 
         mockMvc = MockMvcBuilders
                 .standaloneSetup(petController)
@@ -89,9 +100,13 @@ class PetControllerTest {
 
     @Test
     void initUpdateForm() throws Exception {
+    	
+    	Pet pet = new Pet();
+    	pet.setId(2L);
+    	
         when(ownerService.findById(anyLong())).thenReturn(owner);
         when(petTypeService.findAll()).thenReturn(petTypes);
-        when(petService.findById(anyLong())).thenReturn(Pet.builder().id(2L).build());
+        when(petService.findById(anyLong())).thenReturn(pet);
 
         mockMvc.perform(get("/owners/1/pets/2/edit"))
                 .andExpect(status().isOk())

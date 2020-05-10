@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -19,14 +20,14 @@ import lombok.ToString;
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
+//@ToString
 
 @Entity
 @Table(name = "owners")
 public class Owner extends Person {
 
-    @Builder
-    public Owner(Long id, String firstName, String lastName, String address, String city,
+//    @Builder
+    /*public Owner(Long id, String firstName, String lastName, String address, String city,
                  String telephone, Set<Pet> pets) {
         super(id, firstName, lastName);
         this.address = address;
@@ -36,7 +37,7 @@ public class Owner extends Person {
         if(pets != null) {
             this.pets = pets;
         }
-    }
+    }*/
 
     @Column(name = "address")
     private String address;
@@ -47,7 +48,7 @@ public class Owner extends Person {
     @Column(name = "telephone")
     private String telephone;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner"/*, fetch = FetchType.LAZY*/)
     private Set<Pet> pets = new HashSet<>();
 
 
@@ -87,41 +88,18 @@ public class Owner extends Person {
     }
     
     
-    public void addPet(Pet pet) {
-        getPets().add(pet);
-        pet.setOwner(this);
+    public Owner addPet(Pet pet) {
+    	
+    	if(!this.pets.contains(pet)) {
+    		
+    		this.pets.add(pet);
+            pet.setOwner(this);
+    		
+    	}
+        
+        
+        return this;
     }
-    
-	/*public Set<Pet> getPets() {
-		return pets;
-	}
 
-	public void setPets(Set<Pet> pets) {
-		this.pets = pets;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}*/
 
 }

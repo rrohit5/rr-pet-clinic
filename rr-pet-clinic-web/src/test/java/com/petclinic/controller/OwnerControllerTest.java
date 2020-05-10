@@ -47,9 +47,17 @@ class OwnerControllerTest {
 
     @BeforeEach
     void setUp() {
+    	
         owners = new HashSet<>();
-        owners.add(Owner.builder().id(1l).build());
-        owners.add(Owner.builder().id(2l).build());
+        
+        Owner owner = new Owner();
+        owner.setId(1l);        
+        
+        Owner owner2 = new Owner();
+        owner2.setId(2l);
+        
+        owners.add(owner);
+        owners.add(owner2);
 
         mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)
@@ -89,9 +97,15 @@ class OwnerControllerTest {
 
     @Test
     void processFindFormReturnMany() throws Exception {
+    	
+    	Owner owner = new Owner();
+        owner.setId(1l);        
+        
+        Owner owner2 = new Owner();
+        owner2.setId(2l);
+    	
         when(ownerService.findAllByLastNameLike(anyString()))
-                .thenReturn(Arrays.asList(Owner.builder().id(1l).build(),
-                        Owner.builder().id(2l).build()));
+                .thenReturn(Arrays.asList(owner, owner2));
 
         mockMvc.perform(get("/owners"))
                 .andExpect(status().isOk())
@@ -101,7 +115,15 @@ class OwnerControllerTest {
 
     @Test
     void processFindFormReturnOne() throws Exception {
-        when(ownerService.findAllByLastNameLike(anyString())).thenReturn(Arrays.asList(Owner.builder().id(1l).build()));
+    	
+    	Owner owner = new Owner();
+        owner.setId(1l);        
+        
+        Owner owner2 = new Owner();
+        owner2.setId(2l);
+        
+        when(ownerService.findAllByLastNameLike(anyString()))
+        		.thenReturn(Arrays.asList(owner));
 
         mockMvc.perform(get("/owners"))
                 .andExpect(status().is3xxRedirection())
@@ -110,9 +132,15 @@ class OwnerControllerTest {
 
     @Test
     void processFindFormEmptyReturnMany() throws Exception {
+    	
+    	Owner owner = new Owner();
+        owner.setId(1l);        
+        
+        Owner owner2 = new Owner();
+        owner2.setId(2l);
+        
         when(ownerService.findAllByLastNameLike(anyString()))
-                .thenReturn(Arrays.asList(Owner.builder().id(1l).build(),
-                        Owner.builder().id(2l).build()));
+                .thenReturn(Arrays.asList(owner, owner2));
 
         mockMvc.perform(get("/owners")
                         .param("lastName",""))
@@ -123,7 +151,14 @@ class OwnerControllerTest {
 
     @Test
     void displayOwner() throws Exception {
-        when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1l).build());
+    	
+    	Owner owner = new Owner();
+        owner.setId(1l);        
+        
+        Owner owner2 = new Owner();
+        owner2.setId(2l);
+        
+        when(ownerService.findById(anyLong())).thenReturn(owner);
 
         mockMvc.perform(get("/owners/123"))
                 .andExpect(status().isOk())
@@ -144,7 +179,14 @@ class OwnerControllerTest {
 
     @Test
     void processCreationForm() throws Exception {
-        when(ownerService.save(ArgumentMatchers.any())).thenReturn(Owner.builder().id(1l).build());
+    	
+    	Owner owner = new Owner();
+        owner.setId(1l);        
+        
+        Owner owner2 = new Owner();
+        owner2.setId(2l);
+        
+        when(ownerService.save(ArgumentMatchers.any())).thenReturn(owner);
 
         mockMvc.perform(post("/owners/new"))
                 .andExpect(status().is3xxRedirection())
@@ -156,7 +198,14 @@ class OwnerControllerTest {
 
     @Test
     void initUpdateOwnerForm() throws Exception {
-        when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1l).build());
+    	
+    	Owner owner = new Owner();
+        owner.setId(1l);        
+        
+        Owner owner2 = new Owner();
+        owner2.setId(2l);
+        
+        when(ownerService.findById(anyLong())).thenReturn(owner);
 
         mockMvc.perform(get("/owners/1/edit"))
                 .andExpect(status().isOk())
@@ -168,7 +217,14 @@ class OwnerControllerTest {
 
     @Test
     void processUpdateOwnerForm() throws Exception {
-        when(ownerService.save(ArgumentMatchers.any())).thenReturn(Owner.builder().id(1l).build());
+    	
+    	Owner owner = new Owner();
+        owner.setId(1l);        
+        
+        Owner owner2 = new Owner();
+        owner2.setId(2l);
+        
+        when(ownerService.save(ArgumentMatchers.any())).thenReturn(owner);
 
         mockMvc.perform(post("/owners/1/edit"))
                 .andExpect(status().is3xxRedirection())

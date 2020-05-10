@@ -16,13 +16,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 //@Builder
-@ToString
 
 @Entity
 @Table(name = "types")
 public class PetType extends BaseEntity {
 	
-	@Builder
+//	@Builder
 	public PetType(Long id, String name) {
 		super(id);
 		this.name = name;
@@ -31,16 +30,8 @@ public class PetType extends BaseEntity {
 	@Column(name = "name")
     private String name;
 
-    /*public String getName() {
+	@Override
+    public String toString() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }*/
-	
-	 @Override
-	    public String toString() {
-	        return name;
-	    }
 }

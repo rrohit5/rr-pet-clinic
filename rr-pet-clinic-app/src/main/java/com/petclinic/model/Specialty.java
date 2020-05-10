@@ -15,8 +15,8 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString
+//@Builder
+//@ToString
 
 @Entity
 @Table(name = "specialties")
@@ -25,12 +25,6 @@ public class Specialty extends BaseEntity {
 	@Column(name = "name")
 	private String specialityName;
 
-    /*public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }*/
+  
 
 }

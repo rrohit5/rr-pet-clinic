@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.petclinic.commands.PetCommand;
+import com.petclinic.commands.VisitCommand;
 import com.petclinic.model.Pet;
 import com.petclinic.model.Visit;
 import com.petclinic.service.PetService;
@@ -25,6 +28,8 @@ public class VisitController {
 
     private final VisitService visitService;
     private final PetService petService;
+    
+    ModelMapper mapper = new ModelMapper();
 
     public VisitController(VisitService visitService, PetService petService) {
         this.visitService = visitService;
@@ -54,27 +59,42 @@ public class VisitController {
      * @return Pet
      */
     @ModelAttribute("visit")
-    public Visit loadPetWithVisit(@PathVariable("petId") Long petId, Map<String, Object> model) {
-        Pet pet = petService.findById(petId);
-        model.put("pet", pet);
-        Visit visit = new Visit();
-        pet.getVisits().add(visit);
-        visit.setPet(pet);
-        return visit;
+    public VisitCommand loadPetWithVisit(@PathVariable("petId") Long petId, Map<String, Object> model) {
+        
+    	Pet pet = petService.findById(petId);
+    	
+    	PetCommand petCommand = mapper.map(pet, PetCommand.class);
+    	
+        VisitCommand visitCommand = new VisitCommand();
+        petCommand.addVisit(visitCommand);
+        
+        
+        
+        model.put("pet", petCommand);
+                
+        return visitCommand;
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
     @GetMapping("/owners/*/pets/{petId}/visits/new")
     public String initNewVisitForm(@PathVariable("petId") Long petId, Map<String, Object> model) {
+    	
         return "pets/createOrUpdateVisitForm";
     }
 
     // Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
     @PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
-    public String processNewVisitForm(@Valid Visit visit, BindingResult result) {
+    public String processNewVisitForm(@Valid @ModelAttribute("visit") VisitCommand visitCommand
+    									, BindingResult result) {
+    	
         if (result.hasErrors()) {
+        	
             return "pets/createOrUpdateVisitForm";
+            
         } else {
+        	
+        	Visit visit = mapper.map(visitCommand, Visit.class);
+        	
             visitService.save(visit);
 
             return "redirect:/owners/{ownerId}";

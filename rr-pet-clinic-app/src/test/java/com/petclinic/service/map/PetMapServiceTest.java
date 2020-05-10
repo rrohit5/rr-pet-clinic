@@ -25,7 +25,9 @@ class PetMapServiceTest {
 
         petMapService = new PetMapService();
 
-        petMapService.save(Pet.builder().id(petId).build());
+        Pet pet = new Pet();
+        pet.setId(petId);
+        petMapService.save(pet);
     }
 
     @Test
@@ -65,9 +67,10 @@ class PetMapServiceTest {
 
         Long id = 2L;
 
-        Pet pet2 = Pet.builder().id(id).build();
+        Pet pet = new Pet();
+        pet.setId(id);
 
-        Pet savedPet = petMapService.save(pet2);
+        Pet savedPet = petMapService.save(pet);
 
         assertEquals(id, savedPet.getId());
     }
@@ -77,9 +80,10 @@ class PetMapServiceTest {
 
         Long id = 1L;
 
-        Pet pet2 = Pet.builder().id(id).build();
+        Pet pet = new Pet();
+        pet.setId(petId);
 
-        Pet savedPet = petMapService.save(pet2);
+        Pet savedPet = petMapService.save(pet);
 
 //        assertEquals(id, savedPet.getId());
         assertEquals(1, petMapService.findAll().size());
@@ -88,7 +92,7 @@ class PetMapServiceTest {
     @Test
     void saveNoId() {
 
-        Pet savedPet = petMapService.save(Pet.builder().build());
+        Pet savedPet = petMapService.save(new Pet());
 
         assertNotNull(savedPet);
         assertNotNull(savedPet.getId());
@@ -107,7 +111,8 @@ class PetMapServiceTest {
     @Test
     void deleteWithWrongId() {
 
-        Pet pet = Pet.builder().id(5L).build();
+    	Pet pet = new Pet();
+        pet.setId(5l);
 
         petMapService.delete(pet);
 
@@ -117,7 +122,7 @@ class PetMapServiceTest {
     @Test
     void deleteWithNullId() {
 
-        Pet pet = Pet.builder().build();
+        Pet pet = new Pet();
 
         petMapService.delete(pet);
 

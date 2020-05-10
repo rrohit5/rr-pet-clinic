@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+//@ToString
 
 @MappedSuperclass
 public class Person extends BaseEntity {

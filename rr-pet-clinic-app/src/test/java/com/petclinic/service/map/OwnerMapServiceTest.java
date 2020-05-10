@@ -25,7 +25,11 @@ class OwnerMapServiceTest {
     void setUp() {
         ownerMapService = new OwnerMapService(new PetTypeMapService(), new PetMapService());
 
-        ownerMapService.save(Owner.builder().id(ownerId).lastName(lastName).build());
+        Owner owner = new Owner();
+        owner.setId(ownerId);
+        owner.setLastName(lastName);
+        
+        ownerMapService.save(owner);
     }
 
     @Test
@@ -46,7 +50,8 @@ class OwnerMapServiceTest {
     void saveExistingId() {
         Long id = 2L;
 
-        Owner owner2 = Owner.builder().id(id).build();
+        Owner owner2 = new Owner();
+        owner2.setId(id);
 
         Owner savedOwner = ownerMapService.save(owner2);
 
@@ -57,7 +62,7 @@ class OwnerMapServiceTest {
     @Test
     void saveNoId() {
 
-        Owner savedOwner = ownerMapService.save(Owner.builder().build());
+        Owner savedOwner = ownerMapService.save(new Owner());
 
         assertNotNull(savedOwner);
         assertNotNull(savedOwner.getId());

@@ -22,8 +22,8 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString
+//@Builder
+//@ToString
 
 @Entity
 @Table(name = "vets")
@@ -34,11 +34,5 @@ public class Vet extends Person {
             inverseJoinColumns = @JoinColumn(name = "specialty_id"))
 	private Set<Specialty> specialties = new HashSet<>();
 
-    /*public Set<Speciality> getSpecialities() {
-        return specialities;
-    }
 
-    public void setSpecialities(Set<Speciality> specialities) {
-        this.specialities = specialities;
-    }*/
 }
