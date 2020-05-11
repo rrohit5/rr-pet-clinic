@@ -9,7 +9,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,7 +26,6 @@ import com.petclinic.model.Owner;
 import com.petclinic.repository.OwnerRepository;
 import com.petclinic.repository.PetRepository;
 import com.petclinic.repository.PetTypeRepository;
-import com.petclinic.service.springdatajpa.OwnerSDJpaService;
 
 @ExtendWith(MockitoExtension.class)
 class OwnerSDJpaServiceTest {
@@ -63,6 +64,23 @@ class OwnerSDJpaServiceTest {
         assertEquals(LAST_NAME, smith.getLastName());
 
         verify(ownerRepository).findByLastName(any());
+    }
+    
+    @Test
+    void findAllByLastNameLike() {
+    	
+    	List<Owner> returnOwnersList = new ArrayList<Owner>();
+    	returnOwnersList.add(returnOwner);
+    	
+        when(ownerRepository.findAllByLastNameLike(any())).thenReturn(returnOwnersList);
+
+        List<Owner> owners = service.findAllByLastNameLike(LAST_NAME);
+        
+        Owner smith = owners.get(0);
+
+        assertEquals(LAST_NAME, smith.getLastName());
+
+        verify(ownerRepository).findAllByLastNameLike(any());
     }
 
     @Test
