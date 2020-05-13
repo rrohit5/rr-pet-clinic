@@ -4,21 +4,17 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 //@Builder
 //@ToString
@@ -36,6 +32,10 @@ public class Visit extends BaseEntity {
 	@ManyToOne/*(fetch = FetchType.LAZY)*/
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
+	
+	public Visit() {
+        this.date = LocalDate.now();
+    }
 
     public LocalDate getDate() {
         return date;

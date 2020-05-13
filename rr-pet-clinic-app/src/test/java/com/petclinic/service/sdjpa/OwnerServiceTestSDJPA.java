@@ -1,4 +1,4 @@
-package com.petclinic.service.springdatajpa;
+package com.petclinic.service.sdjpa;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,10 +10,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,25 +21,25 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.petclinic.model.Owner;
-import com.petclinic.repository.OwnerRepository;
-import com.petclinic.repository.PetRepository;
-import com.petclinic.repository.PetTypeRepository;
+import com.petclinic.repository.sdjpa.OwnerRepositorySDJPA;
+import com.petclinic.repository.sdjpa.PetRepositorySDJPA;
+import com.petclinic.repository.sdjpa.PetTypeRepositorySDJPA;
 
 @ExtendWith(MockitoExtension.class)
-class OwnerSDJpaServiceTest {
+class OwnerServiceTestSDJPA {
 
     public static final String LAST_NAME = "Smith";
     @Mock
-    OwnerRepository ownerRepository;
+    OwnerRepositorySDJPA ownerRepository;
 
     @Mock
-    PetRepository petRepository;
+    PetRepositorySDJPA petRepository;
 
     @Mock
-    PetTypeRepository petTypeRepository;
+    PetTypeRepositorySDJPA petTypeRepository;
 
     @InjectMocks
-    OwnerSDJpaService service;
+    OwnerServiceSDJPA service;
 
     Owner returnOwner;
 
@@ -86,19 +84,19 @@ class OwnerSDJpaServiceTest {
     @Test
     void findAll() {
         
-    	Set<Owner> returnOwnersSet = new HashSet<>();
+    	List<Owner> returnOwnersList = new ArrayList<>();
     	
     	Owner owner = new Owner();
         owner.setId(1l);        
-        returnOwnersSet.add(owner);
+        returnOwnersList.add(owner);
         
         Owner owner2 = new Owner();
         owner2.setId(2l);
-        returnOwnersSet.add(owner2);
+        returnOwnersList.add(owner2);
 
-        when(ownerRepository.findAll()).thenReturn(returnOwnersSet);
+        when(ownerRepository.findAll()).thenReturn(returnOwnersList);
 
-        Set<Owner> owners = service.findAll();
+        List<Owner> owners = service.findAll();
 
         assertNotNull(owners);
         assertEquals(2, owners.size());

@@ -1,31 +1,23 @@
-package com.petclinic.service.springdatajpa;
+package com.petclinic.service.sdjpa;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.petclinic.model.Owner;
-import com.petclinic.repository.OwnerRepository;
-import com.petclinic.repository.PetRepository;
-import com.petclinic.repository.PetTypeRepository;
+import com.petclinic.repository.sdjpa.OwnerRepositorySDJPA;
 import com.petclinic.service.OwnerService;
 
 @Service
-@Profile("springdatajpa")
-public class OwnerSDJpaService implements OwnerService {
+@Profile("sdjpa")
+public class OwnerServiceSDJPA implements OwnerService {
 
-    private final OwnerRepository ownerRepository;
-    private final PetRepository petRepository;
-    private final PetTypeRepository petTypeRepository;
+    private final OwnerRepositorySDJPA ownerRepository;
 
-    public OwnerSDJpaService(OwnerRepository ownerRepository, PetRepository petRepository,
-                             PetTypeRepository petTypeRepository) {
+    public OwnerServiceSDJPA(OwnerRepositorySDJPA ownerRepository) {
         this.ownerRepository = ownerRepository;
-        this.petRepository = petRepository;
-        this.petTypeRepository = petTypeRepository;
     }
 
     @Override
@@ -39,8 +31,8 @@ public class OwnerSDJpaService implements OwnerService {
     }
 
     @Override
-    public Set<Owner> findAll() {
-        Set<Owner> owners = new HashSet<>();
+    public List<Owner> findAll() {
+        List<Owner> owners = new ArrayList<>();
         ownerRepository.findAll().forEach(owners::add);
         return owners;
     }

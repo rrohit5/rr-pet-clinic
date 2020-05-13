@@ -13,7 +13,9 @@ import lombok.Setter;
 
 public class PetTypeCommand {
 
-	private Long id;
+	private String id;
+	
+//	@NotEmpty
     private String name;
 
 	@Override

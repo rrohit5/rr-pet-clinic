@@ -1,4 +1,4 @@
-package com.petclinic.service.springdatajpa;
+package com.petclinic.service.sdjpa;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,9 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,34 +19,34 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.petclinic.model.Visit;
-import com.petclinic.repository.VisitRepository;
+import com.petclinic.model.Specialty;
+import com.petclinic.repository.sdjpa.SpecialtyRepositorySDJPA;
 
 @ExtendWith(MockitoExtension.class)
-public class VisitSDJpaServiceTest {
+public class SpecialtyServiceTestSDJPA {
 
 	@Mock
-	VisitRepository repository;
+	SpecialtyRepositorySDJPA repository;
 
 	@InjectMocks
-	VisitSDJpaService service;
+	SpecialtyServiceSDJPA service;
 
-	Visit visit1;
-	Visit visit2;
-	Set<Visit> sps;
+	Specialty sp1;
+	Specialty sp2;
+	List<Specialty> sps;
 
 	@BeforeEach
 	void setUp() {
 
-		visit1 = new Visit();
-		visit1.setId(1l);
+		sp1 = new Specialty();
+		sp1.setId(1l);
 
-		visit2 = new Visit();
-		visit2.setId(2l);
+		sp2 = new Specialty();
+		sp2.setId(2l);
 
-		sps = new HashSet<>();
-		sps.add(visit1);
-		sps.add(visit2);
+		sps = new ArrayList<>();
+		sps.add(sp1);
+		sps.add(sp2);
 
 	}
 
@@ -55,7 +55,7 @@ public class VisitSDJpaServiceTest {
 
 		when(repository.findAll()).thenReturn(sps);
 
-		Set<Visit> returnedsps = service.findAll();
+		List<Specialty> returnedsps = service.findAll();
 
 		assertNotNull(returnedsps);
 		assertEquals(2, returnedsps.size());
@@ -64,9 +64,9 @@ public class VisitSDJpaServiceTest {
 	@Test
 	public void findById() {
 
-		when(repository.findById(anyLong())).thenReturn(Optional.of(visit1));
+		when(repository.findById(anyLong())).thenReturn(Optional.of(sp1));
 
-		Visit sp = service.findById(1L);
+		Specialty sp = service.findById(1L);
 
 		assertNotNull(sp);
 	}
@@ -74,18 +74,18 @@ public class VisitSDJpaServiceTest {
 	@Test
 	public void save() {
 		
-		when(repository.save(any())).thenReturn(visit1);
+		when(repository.save(any())).thenReturn(sp1);
 		
-		Visit sp = service.save(visit1);
+		Specialty sp = service.save(sp1);
 				
-		assertNotNull(visit1);
+		assertNotNull(sp);
 
         verify(repository).save(any());		
 	}
 	
     @Test
     void delete() {
-    	service.delete(visit1);
+    	service.delete(sp1);
 
         //default is 1 times
         verify(repository, times(1)).delete(any());

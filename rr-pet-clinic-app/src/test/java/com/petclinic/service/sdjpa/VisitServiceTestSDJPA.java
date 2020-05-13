@@ -1,4 +1,4 @@
-package com.petclinic.service.springdatajpa;
+package com.petclinic.service.sdjpa;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,9 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,55 +19,54 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.petclinic.model.Vet;
-import com.petclinic.repository.VetRepository;
+import com.petclinic.model.Visit;
+import com.petclinic.repository.sdjpa.VisitRepositorySDJPA;
 
 @ExtendWith(MockitoExtension.class)
-public class VetSDJpaServiceTest {
+public class VisitServiceTestSDJPA {
 
 	@Mock
-	VetRepository repository;
+	VisitRepositorySDJPA repository;
 
 	@InjectMocks
-	VetSDJpaService service;
+	VisitServiceSDJPA service;
 
-	Vet vet1;
-	Vet vet2;
-	Set<Vet> vets;
+	Visit visit1;
+	Visit visit2;
+	List<Visit> sps;
 
 	@BeforeEach
 	void setUp() {
 
-		vet1 = new Vet();
-		vet1.setId(1l);
+		visit1 = new Visit();
+		visit1.setId(1l);
 
-		vet2 = new Vet();
-		vet2.setId(2l);
-		
-		vets = new HashSet<>();
+		visit2 = new Visit();
+		visit2.setId(2l);
 
-		vets.add(vet1);
-		vets.add(vet2);
+		sps = new ArrayList<>();
+		sps.add(visit1);
+		sps.add(visit2);
 
 	}
 
 	@Test
 	public void findAll() {
 
-		when(repository.findAll()).thenReturn(vets);
+		when(repository.findAll()).thenReturn(sps);
 
-		Set<Vet> returnedvets = service.findAll();
+		List<Visit> returnedsps = service.findAll();
 
-		assertNotNull(returnedvets);
-		assertEquals(2, returnedvets.size());
+		assertNotNull(returnedsps);
+		assertEquals(2, returnedsps.size());
 	}
 
 	@Test
 	public void findById() {
 
-		when(repository.findById(anyLong())).thenReturn(Optional.of(vet1));
+		when(repository.findById(anyLong())).thenReturn(Optional.of(visit1));
 
-		Vet sp = service.findById(1L);
+		Visit sp = service.findById(1L);
 
 		assertNotNull(sp);
 	}
@@ -75,18 +74,18 @@ public class VetSDJpaServiceTest {
 	@Test
 	public void save() {
 		
-		when(repository.save(any())).thenReturn(vet1);
+		when(repository.save(any())).thenReturn(visit1);
 		
-		Vet sp = service.save(vet1);
+		Visit sp = service.save(visit1);
 				
-		assertNotNull(vet1);
+		assertNotNull(sp);
 
         verify(repository).save(any());		
 	}
 	
     @Test
     void delete() {
-    	service.delete(vet1);
+    	service.delete(visit1);
 
         //default is 1 times
         verify(repository, times(1)).delete(any());

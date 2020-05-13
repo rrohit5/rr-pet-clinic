@@ -7,7 +7,6 @@ import com.petclinic.model.Owner;
 public interface OwnerService extends CrudService<Owner, Long>{//<T, ID>--satisfy the generic declaration for the class.
 
 //	Owner findById(Long id);
-	Owner findByLastName(String lastName);
 //	Owner save(Owner owner);
 //	Set<Owner> findAll();
 	
@@ -15,4 +14,6 @@ public interface OwnerService extends CrudService<Owner, Long>{//<T, ID>--satisf
 	and make this class extend the CrudService class.*/
 	
 	List<Owner> findAllByLastNameLike(String lastName);
+
+	Owner findByLastName(String lastName);
 }

@@ -3,7 +3,6 @@ package com.petclinic.controller;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -78,7 +77,10 @@ public class PetController {
     }
     
     
-    
+//    @InitBinder("pet")
+//    public void initPetBinder(WebDataBinder dataBinder) {
+//        dataBinder.setValidator(new PetValidator());
+//    }
     
     
     
@@ -86,8 +88,9 @@ public class PetController {
     @GetMapping("/pets/new")
     public String initCreationForm(@ModelAttribute("owner") OwnerCommand ownerCommand, Model model) {
     	
+    	
     	PetCommand petCommand = new PetCommand();
-        ownerCommand.addPet(petCommand);
+    	ownerCommand.addPet(petCommand);
         model.addAttribute("pet", petCommand);
         
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
@@ -147,7 +150,6 @@ public class PetController {
     	
         if (result.hasErrors()) {
         	
-//            pet.setOwner(owner);
             model.addAttribute("pet", petCommand);
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
             

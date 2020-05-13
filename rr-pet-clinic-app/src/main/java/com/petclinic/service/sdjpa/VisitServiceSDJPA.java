@@ -1,28 +1,28 @@
-package com.petclinic.service.springdatajpa;
+package com.petclinic.service.sdjpa;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.petclinic.model.Visit;
-import com.petclinic.repository.VisitRepository;
+import com.petclinic.repository.sdjpa.VisitRepositorySDJPA;
 import com.petclinic.service.VisitService;
 
 @Service
-@Profile("springdatajpa")
-public class VisitSDJpaService implements VisitService {
+@Profile("sdjpa")
+public class VisitServiceSDJPA implements VisitService {
 
-    private final VisitRepository visitRepository;
+    private final VisitRepositorySDJPA visitRepository;
 
-    public VisitSDJpaService(VisitRepository visitRepository) {
+    public VisitServiceSDJPA(VisitRepositorySDJPA visitRepository) {
         this.visitRepository = visitRepository;
     }
 
     @Override
-    public Set<Visit> findAll() {
-        Set<Visit> visits = new HashSet<>();
+    public List<Visit> findAll() {
+        List<Visit> visits = new ArrayList<>();
         visitRepository.findAll().forEach(visits::add);
         return visits;
     }
@@ -46,4 +46,10 @@ public class VisitSDJpaService implements VisitService {
     public void deleteById(Long aLong) {
         visitRepository.deleteById(aLong);
     }
+
+	@Override
+	public List<Visit> findVisitsByPetId(Long petId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

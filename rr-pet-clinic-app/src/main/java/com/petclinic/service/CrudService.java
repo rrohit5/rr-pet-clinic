@@ -1,11 +1,11 @@
 package com.petclinic.service;
 
-import java.util.Set;
+import java.util.List;
 
 //Spring CRUD repository uses this pattern. mimicking the same.
 public interface CrudService <T, ID> {
 
-	Set<T> findAll();
+	List<T> findAll();
 	T findById(ID id);
 	T save(T object);
 	void delete(T object);

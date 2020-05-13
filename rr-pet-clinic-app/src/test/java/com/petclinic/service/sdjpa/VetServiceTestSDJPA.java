@@ -1,4 +1,4 @@
-package com.petclinic.service.springdatajpa;
+package com.petclinic.service.sdjpa;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,9 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,54 +19,55 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.petclinic.model.Specialty;
-import com.petclinic.repository.SpecialtyRepository;
+import com.petclinic.model.Vet;
+import com.petclinic.repository.sdjpa.VetRepositorySDJPA;
 
 @ExtendWith(MockitoExtension.class)
-public class SpecialtySDJpaServiceTest {
+public class VetServiceTestSDJPA {
 
 	@Mock
-	SpecialtyRepository repository;
+	VetRepositorySDJPA repository;
 
 	@InjectMocks
-	SpecialtySDJpaService service;
+	VetServiceSDJPA service;
 
-	Specialty sp1;
-	Specialty sp2;
-	Set<Specialty> sps;
+	Vet vet1;
+	Vet vet2;
+	List<Vet> vets;
 
 	@BeforeEach
 	void setUp() {
 
-		sp1 = new Specialty();
-		sp1.setId(1l);
+		vet1 = new Vet();
+		vet1.setId(1l);
 
-		sp2 = new Specialty();
-		sp2.setId(2l);
+		vet2 = new Vet();
+		vet2.setId(2l);
+		
+		vets = new ArrayList<>();
 
-		sps = new HashSet<>();
-		sps.add(sp1);
-		sps.add(sp2);
+		vets.add(vet1);
+		vets.add(vet2);
 
 	}
 
 	@Test
 	public void findAll() {
 
-		when(repository.findAll()).thenReturn(sps);
+		when(repository.findAll()).thenReturn(vets);
 
-		Set<Specialty> returnedsps = service.findAll();
+		List<Vet> returnedvets = service.findAll();
 
-		assertNotNull(returnedsps);
-		assertEquals(2, returnedsps.size());
+		assertNotNull(returnedvets);
+		assertEquals(2, returnedvets.size());
 	}
 
 	@Test
 	public void findById() {
 
-		when(repository.findById(anyLong())).thenReturn(Optional.of(sp1));
+		when(repository.findById(anyLong())).thenReturn(Optional.of(vet1));
 
-		Specialty sp = service.findById(1L);
+		Vet sp = service.findById(1L);
 
 		assertNotNull(sp);
 	}
@@ -74,18 +75,18 @@ public class SpecialtySDJpaServiceTest {
 	@Test
 	public void save() {
 		
-		when(repository.save(any())).thenReturn(sp1);
+		when(repository.save(any())).thenReturn(vet1);
 		
-		Specialty sp = service.save(sp1);
+		Vet sp = service.save(vet1);
 				
-		assertNotNull(sp1);
+		assertNotNull(sp);
 
         verify(repository).save(any());		
 	}
 	
     @Test
     void delete() {
-    	service.delete(sp1);
+    	service.delete(vet1);
 
         //default is 1 times
         verify(repository, times(1)).delete(any());

@@ -1,4 +1,4 @@
-package com.petclinic.repository;
+package com.petclinic.repository.sdjpa;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.petclinic.model.Owner;
 
-public interface OwnerRepository extends CrudRepository<Owner, Long> {
+public interface OwnerRepositorySDJPA extends CrudRepository<Owner, Long> {
 	
 	 Owner findByLastName(String lastName);
 	 

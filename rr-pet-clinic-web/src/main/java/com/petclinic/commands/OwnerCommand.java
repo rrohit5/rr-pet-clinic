@@ -6,7 +6,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 
 @Setter
@@ -16,14 +15,40 @@ import lombok.ToString;
 
 public class OwnerCommand {
 
-	private Long id;
+	private String id;
+	
+//	@NotEmpty
 	private String firstName;
+	
+//	@NotEmpty
     private String lastName;
+	
+//	@NotEmpty
     private String address;
+	
+//	@NotEmpty
     private String city;
+	
+//	@NotEmpty
+//	@Digits(fraction = 0, integer = 10)
     private String telephone;
+	
+	
     private Set<PetCommand> pets = new HashSet<>();
 
+    
+    public void addPet(PetCommand pet) {
+    	pet.setOwner(this);
+    	this.pets.add(pet);        
+    }
+
+    public boolean isNew() {
+        return this.id == null;
+    }
+    
+    
+    
+    
 
     /**
      * Return the Pet with the given name, or null if none found for this Owner.
@@ -59,20 +84,6 @@ public class OwnerCommand {
         
         return null;
     }
-    
-    
-    public void addPet(PetCommand pet) {
-    	pet.setOwner(this);
-    	this.pets.add(pet);        
-    }
-
-    public boolean isNew() {
-        return this.id == null;
-    }
-    
-    
-    
-    
     
     
     

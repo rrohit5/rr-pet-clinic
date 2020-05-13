@@ -1,6 +1,6 @@
 package com.petclinic.service.map;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import com.petclinic.service.SpecialtyService;
 import com.petclinic.service.VetService;
 
 @Service
-@Profile({"default", "map"})
+@Profile({"map"})
 public class VetMapService extends AbstractMapService<Vet, Long> implements VetService{ 
 //implements CrudService<Vet, Long> {
 
@@ -41,7 +41,7 @@ public class VetMapService extends AbstractMapService<Vet, Long> implements VetS
 	}
 
 	@Override
-	public Set<Vet> findAll() {
+	public List<Vet> findAll() {
 		return super.findAll();
 	}
 

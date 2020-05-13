@@ -1,7 +1,10 @@
 package com.petclinic.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,14 +16,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
@@ -31,12 +34,11 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "pets")
-public class Pet extends BaseEntity {
+public class Pet extends NamedEntity {
 
 	// @Builder
 	public Pet(Long id, String name, PetType petType, Owner owner, LocalDate birthDate, Set<Visit> visits) {
-		super(id);
-		this.name = name;
+		super(id, name);
 		this.petType = petType;
 		this.owner = owner;
 		this.birthDate = birthDate;
@@ -47,9 +49,10 @@ public class Pet extends BaseEntity {
 		}
 	}
 
-	@Column(name = "name")
-	private String name;
-
+	@Column(name = "birth_date")
+	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	private LocalDate birthDate;
+		
 	@ManyToOne/*(fetch = FetchType.LAZY)*/
 	@JoinColumn(name = "type_id")
 	private PetType petType;
@@ -58,11 +61,7 @@ public class Pet extends BaseEntity {
 	@JoinColumn(name = "owner_id")
 	private Owner owner;
 
-	@Column(name = "birth_date")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate birthDate;
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet"/*, fetch = FetchType.LAZY*/)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.LAZY)
 	private Set<Visit> visits = new HashSet<>();
 
 	public Pet addVisit(Visit visit) {
@@ -87,6 +86,12 @@ public class Pet extends BaseEntity {
 		}
 		
 	}
+	
+	public List<Visit> getVisitsList() {
+        List<Visit> sortedVisits = new ArrayList<>(getVisits());
+        PropertyComparator.sort(sortedVisits, new MutableSortDefinition("date", false, false));
+        return Collections.unmodifiableList(sortedVisits);
+    }
 
 
 }

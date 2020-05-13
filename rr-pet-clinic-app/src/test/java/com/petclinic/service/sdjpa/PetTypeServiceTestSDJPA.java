@@ -1,4 +1,4 @@
-package com.petclinic.service.springdatajpa;
+package com.petclinic.service.sdjpa;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,9 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,20 +20,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.petclinic.model.PetType;
-import com.petclinic.repository.PetTypeRepository;
+import com.petclinic.repository.sdjpa.PetTypeRepositorySDJPA;
 
 @ExtendWith(MockitoExtension.class)
-public class PetTypeSDJpaServiceTest {
+public class PetTypeServiceTestSDJPA {
 
 	@Mock
-	PetTypeRepository repository;
+	PetTypeRepositorySDJPA repository;
 
 	@InjectMocks
-	PetTypeSDJpaService service;
+	PetTypeServiceSDJPA service;
 
 	PetType petType1;
 	PetType petType2;
-	Set<PetType> petTypes;
+	List<PetType> petTypes;
 
 	@BeforeEach
 	void setUp() {
@@ -44,7 +44,7 @@ public class PetTypeSDJpaServiceTest {
 		petType2 = new PetType();
 		petType2.setId(2l);
 
-		petTypes = new HashSet<>();
+		petTypes = new ArrayList<>();
 		
 		petTypes.add(petType1);
 		petTypes.add(petType2);
@@ -56,7 +56,7 @@ public class PetTypeSDJpaServiceTest {
 
 		when(repository.findAll()).thenReturn(petTypes);
 
-		Set<PetType> returnedPetTypes = service.findAll();
+		List<PetType> returnedPetTypes = service.findAll();
 
 		assertNotNull(returnedPetTypes);
 		assertEquals(2, returnedPetTypes.size());
@@ -79,7 +79,7 @@ public class PetTypeSDJpaServiceTest {
 		
 		PetType petType = service.save(petType1);
 				
-		assertNotNull(petType1);
+		assertNotNull(petType);
 
         verify(repository).save(any());		
 	}

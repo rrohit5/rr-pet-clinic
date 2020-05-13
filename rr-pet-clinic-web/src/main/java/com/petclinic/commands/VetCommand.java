@@ -18,9 +18,14 @@ import lombok.Setter;
 
 public class VetCommand {
 	
-	private Long id;
+	private String id;
+	
+//	@NotEmpty
 	private String firstName;
+	
+//	@NotEmpty
     private String lastName;
+	
 	private Set<SpecialtyCommand> specialties = new HashSet<>();
 
 

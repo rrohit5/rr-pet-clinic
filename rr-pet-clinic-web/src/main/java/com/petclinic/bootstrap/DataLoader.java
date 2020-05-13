@@ -19,7 +19,7 @@ import com.petclinic.service.VetService;
 import com.petclinic.service.VisitService;
 
 @Component
-@Profile({"default", "h2"})
+@Profile({"h2"})
 public class DataLoader implements CommandLineRunner {
 
 	private final OwnerService ownerService;
@@ -28,10 +28,6 @@ public class DataLoader implements CommandLineRunner {
 	private final SpecialtyService specialtyService;
 	private final VisitService visitService;
 
-//	public DataLoader() {
-//		ownerService = new OwnerServiceMap();
-//		vetService = new VetServiceMap();
-//	}
 
 	// @Autowired - not required for const DI
 	public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService
@@ -46,11 +42,6 @@ public class DataLoader implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-//		List<Integer> listWithDuplicates = new ArrayList<>( Arrays.asList(1, 1, 2, 2, 3, 3));
-//	    List<Integer> listWithoutDuplicates = listWithDuplicates.stream()
-//	     .distinct()
-//	     .collect(Collectors.toList());
-	     
 		int count = petTypeService.findAll().size();
 
         if (count == 0 ){
@@ -70,15 +61,15 @@ public class DataLoader implements CommandLineRunner {
 		PetType savedCatPetType = petTypeService.save(cat);
 		
 		Specialty radiology = new Specialty();
-        radiology.setSpecialityName("Radiology");
+        radiology.setName("Radiology");
         Specialty savedRadiology = specialtyService.save(radiology);
 
         Specialty surgery = new Specialty();
-        surgery.setSpecialityName("Surgery");
+        surgery.setName("Surgery");
         Specialty savedSurgery = specialtyService.save(surgery);
 
         Specialty dentistry = new Specialty();
-        dentistry.setSpecialityName("dentistry");
+        dentistry.setName("dentistry");
         Specialty savedDentistry = specialtyService.save(dentistry);
 
 		Owner owner1 = new Owner();
@@ -143,6 +134,15 @@ public class DataLoader implements CommandLineRunner {
 		vet2.getSpecialties().add(savedSurgery);
 
 		vetService.save(vet2);
+		
+		Vet vet3 = new Vet();
+		// remove ID parameter as we are generating it automatically
+//	        vet2.setId(2L);
+		vet3.setFirstName("Jacky");
+		vet3.setLastName("Chan");
+		vet3.getSpecialties().add(savedDentistry);
+
+		vetService.save(vet3);
 
 		System.out.println("Loaded Vets....");
 	}

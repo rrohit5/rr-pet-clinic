@@ -1,28 +1,28 @@
-package com.petclinic.service.springdatajpa;
+package com.petclinic.service.sdjpa;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.petclinic.model.Pet;
-import com.petclinic.repository.PetRepository;
+import com.petclinic.repository.sdjpa.PetRepositorySDJPA;
 import com.petclinic.service.PetService;
 
 @Service
-@Profile("springdatajpa")
-public class PetSDJpaService implements PetService {
+@Profile("sdjpa")
+public class PetServiceSDJPA implements PetService {
 
-    private final PetRepository petRepository;
+    private final PetRepositorySDJPA petRepository;
 
-    public PetSDJpaService(PetRepository petRepository) {
+    public PetServiceSDJPA(PetRepositorySDJPA petRepository) {
         this.petRepository = petRepository;
     }
 
     @Override
-    public Set<Pet> findAll() {
-        Set<Pet> pets = new HashSet<>();
+    public List<Pet> findAll() {
+        List<Pet> pets = new ArrayList<>();
         petRepository.findAll().forEach(pets::add);
         return pets;
     }

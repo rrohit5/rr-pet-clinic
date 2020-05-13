@@ -1,15 +1,15 @@
 package com.petclinic.service.map;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 import com.petclinic.model.BaseEntity;
 
-//since all aour model(T) extends BaseEntity class, we will make T extend BaseEntity below.
+//since all our model(T) extends BaseEntity class, we will make T extend BaseEntity below.
 public abstract class AbstractMapService <T extends BaseEntity, ID extends Long> {
 //public abstract class AbstractMapService <T, ID extends Long> {
 //public abstract class AbstractMapService <T, ID> {   //getNextId() comments
@@ -17,8 +17,8 @@ public abstract class AbstractMapService <T extends BaseEntity, ID extends Long>
 	protected Map<Long, T> map = new HashMap<Long, T>();
 //	protected Map<ID, T> map = new HashMap<ID, T>();   //getNextId() comments
 	
-	Set<T> findAll(){		
-		return new HashSet<>(map.values());
+	List<T> findAll(){		
+		return new ArrayList<>(map.values());
 	}
 	
 	T findById(ID id) {

@@ -2,6 +2,8 @@ package com.petclinic.commands;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +18,21 @@ import lombok.Setter;
 
 public class VisitCommand {
 
-	private Long id;
+	private String id;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate date;
+	
+//	@NotEmpty
 	private String description;
+	
 	private PetCommand pet;
 
     public LocalDate getDate() {
         return date;
     }
     
+    public boolean isNew() {
+		return this.id == null;
+	}
 }

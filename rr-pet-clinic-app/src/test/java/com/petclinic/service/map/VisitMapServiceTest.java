@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.Set;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class VisitMapServiceTest {
     @Test
     void findAll() {
 
-        Set<Visit> visitSet = visitMapService.findAll();
+        List<Visit> visitSet = visitMapService.findAll();
 
         assertEquals(1, visitSet.size());
     }
@@ -113,7 +113,7 @@ class VisitMapServiceTest {
 
         Visit savedVisit = visitMapService.save(visit);
 
-//        assertEquals(id, savedVisit.getId());
+        assertEquals(id, savedVisit.getId());
         assertEquals(1, visitMapService.findAll().size());
     }
 

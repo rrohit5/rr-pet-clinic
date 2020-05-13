@@ -80,7 +80,7 @@ public class OwnerController {
     }
 	
     @RequestMapping("/find")
-    public String findOwners(Model model){
+    public String initFindForm(Model model){
     	
         model.addAttribute("owner", new OwnerCommand());
         return "owners/findOwners";
@@ -97,7 +97,7 @@ public class OwnerController {
         }
 
         // find owners by last name
-//        List<Owner> results = ownerService.findAllByLastNameLike(owner.getLastName());
+//        List<Owner> results = ownerService.findByLastName(ownerCommand.getLastName());
         List<Owner> results = ownerService.findAllByLastNameLike("%"+ ownerCommand.getLastName() + "%");
 
         if (results.isEmpty()) {

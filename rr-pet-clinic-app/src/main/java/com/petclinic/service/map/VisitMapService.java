@@ -1,6 +1,6 @@
 package com.petclinic.service.map;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -9,11 +9,11 @@ import com.petclinic.model.Visit;
 import com.petclinic.service.VisitService;
 
 @Service
-@Profile({"default", "map"})
+@Profile({"map"})
 public class VisitMapService extends AbstractMapService<Visit, Long> implements VisitService {
 
     @Override
-    public Set<Visit> findAll() {
+    public List<Visit> findAll() {
         return super.findAll();
     }
 
@@ -42,5 +42,11 @@ public class VisitMapService extends AbstractMapService<Visit, Long> implements 
     public void deleteById(Long id) {
         super.deleteById(id);
     }
+
+	@Override
+	public List<Visit> findVisitsByPetId(Long petId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }

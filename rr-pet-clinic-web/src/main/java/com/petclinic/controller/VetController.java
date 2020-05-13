@@ -1,5 +1,6 @@
 package com.petclinic.controller;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.petclinic.commands.PetTypeCommand;
 import com.petclinic.commands.VetCommand;
 import com.petclinic.model.Vet;
 import com.petclinic.service.VetService;
@@ -29,9 +29,9 @@ public class VetController {
     }
 
     @RequestMapping({"/vets", "/vets/index", "/vets/index.html", "/vets.html"})
-    public String listVets(Model model){
+    public String showVetList(Model model){
 
-    	Set<Vet> vets = vetService.findAll();
+    	List<Vet> vets = vetService.findAll();
     	
     	Set<VetCommand> vetCommands = vets.stream()
 											.map(p -> mapper.map(p, VetCommand.class))
@@ -42,10 +42,10 @@ public class VetController {
         return "vets/index";
     }
 
-    @GetMapping("/api/vets")
-    public @ResponseBody Set<VetCommand> getVetsJson(){
+    @GetMapping({ "/vets.json", "/vets.xml"})
+    public @ResponseBody Set<VetCommand> showResourcesVetList(){
     	
-    	Set<Vet> vets = vetService.findAll();
+    	List<Vet> vets = vetService.findAll();
     	
     	Set<VetCommand> vetCommands = vets.stream()
 											.map(p -> mapper.map(p, VetCommand.class))

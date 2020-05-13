@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.petclinic.commands.PetTypeCommand;
 import com.petclinic.model.PetType;
 import com.petclinic.service.PetTypeService;
 
@@ -29,7 +30,7 @@ public class PetTypeFormatterTest {
 
 	Locale locale;
 
-	Set<PetType> petTypes;
+	List<PetType> petTypes;
 
 	@BeforeEach
 	public void setUp() {
@@ -46,7 +47,7 @@ public class PetTypeFormatterTest {
 		pet2.setId(2L);
 		pet2.setName("Cat");
 
-		petTypes = new HashSet<>();
+		petTypes = new ArrayList<>();
 		petTypes.add(pet);
 		petTypes.add(pet2);
 
@@ -55,8 +56,8 @@ public class PetTypeFormatterTest {
 	@Test
 	public void print() {
 		
-		PetType petType = new PetType();
-		petType.setId(1L);
+		PetTypeCommand petType = new PetTypeCommand();
+		petType.setId("1");
 		petType.setName("Dog");
 		
 		String retName = petTypeFormatter.print(petType, locale);
@@ -71,7 +72,7 @@ public class PetTypeFormatterTest {
 		
 		when(petTypeService.findAll()).thenReturn(petTypes);
 		
-		PetType petType = petTypeFormatter.parse(type, locale);
+		PetTypeCommand petType = petTypeFormatter.parse(type, locale);
 		
 		assertEquals(type, petType.getName());
 	}

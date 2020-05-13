@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.petclinic.controller.PetController;
 import com.petclinic.model.Owner;
 import com.petclinic.model.Pet;
 import com.petclinic.model.PetType;
@@ -48,7 +47,7 @@ class PetControllerTest {
     MockMvc mockMvc;
 
     Owner owner;
-    Set<PetType> petTypes;
+    List<PetType> petTypes;
 
     @BeforeEach
     void setUp() {
@@ -65,7 +64,7 @@ class PetControllerTest {
         pet2.setName("Cat");
         
 
-        petTypes = new HashSet<>();
+        petTypes = new ArrayList<>();
         petTypes.add(pet);
         petTypes.add(pet2);
 

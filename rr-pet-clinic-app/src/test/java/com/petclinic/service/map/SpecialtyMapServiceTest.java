@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.Set;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class SpecialtyMapServiceTest {
     @Test
     void findAll() {
 
-        Set<Specialty> specialtySet = specialtyMapService.findAll();
+        List<Specialty> specialtySet = specialtyMapService.findAll();
 
         assertEquals(1, specialtySet.size());
     }
@@ -84,7 +84,7 @@ class SpecialtyMapServiceTest {
 
         Specialty savedSpecialty = specialtyMapService.save(specialty);
 
-//        assertEquals(id, savedSpecialty.getId());
+        assertEquals(id, savedSpecialty.getId());
         assertEquals(1, specialtyMapService.findAll().size());
     }
 

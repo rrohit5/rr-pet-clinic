@@ -1,20 +1,24 @@
 package com.petclinic.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.Builder;
+import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.PropertyComparator;
+import org.springframework.core.style.ToStringCreator;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 
 @Setter
@@ -25,19 +29,6 @@ import lombok.ToString;
 @Entity
 @Table(name = "owners")
 public class Owner extends Person {
-
-//    @Builder
-    /*public Owner(Long id, String firstName, String lastName, String address, String city,
-                 String telephone, Set<Pet> pets) {
-        super(id, firstName, lastName);
-        this.address = address;
-        this.city = city;
-        this.telephone = telephone;
-
-        if(pets != null) {
-            this.pets = pets;
-        }
-    }*/
 
     @Column(name = "address")
     private String address;
@@ -88,6 +79,13 @@ public class Owner extends Person {
     }
     
     
+    public List<Pet> getPetsList() {
+        List<Pet> sortedPets = new ArrayList<>(getPets());
+        PropertyComparator.sort(sortedPets, new MutableSortDefinition("name", true, true));
+        return Collections.unmodifiableList(sortedPets);
+    }
+    
+    
     public Owner addPet(Pet pet) {
     	
     	if(!this.pets.contains(pet)) {
@@ -95,10 +93,25 @@ public class Owner extends Person {
     		this.pets.add(pet);
             pet.setOwner(this);
     		
-    	}
-        
+    	}        
         
         return this;
+    }
+    
+    @Override
+    public String toString() {
+    	
+        return new ToStringCreator(this)
+
+            .append("id", this.getId())
+            .append("new", this.isNew())
+            .append("lastName", this.getLastName())
+            .append("firstName", this.getFirstName())
+            .append("address", this.address)
+            .append("city", this.city)
+            .append("telephone", this.telephone)
+            .append("no. of pets", this.getPets().size())
+            .toString();
     }
 
 

@@ -14,7 +14,9 @@ import lombok.Setter;
 
 public class SpecialtyCommand {
 	
-	private Long id;
+	private String id;
+	
+//	@NotEmpty
 	private String specialityName;
 
 }

@@ -1,7 +1,6 @@
 package com.petclinic.service.map;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import com.petclinic.service.PetTypeService;
  * 		Both has same methods and so here mark all intf methods as public
  */
 @Service
-@Profile({"default", "map"})
+@Profile({"map"})
 public class OwnerMapService extends AbstractMapService<Owner, Long> implements OwnerService{ 
 
 //implements CrudService<Owner, Long>{
@@ -69,7 +68,7 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
 	}
 
 	@Override
-	public Set<Owner> findAll() {
+	public List<Owner> findAll() {
 		return super.findAll();
 	}
 
@@ -90,6 +89,7 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
 
 	@Override
 	public Owner findByLastName(String lastName) {
+		
 		 return this.findAll()
 	                .stream()
 	                .filter(owner -> owner.getLastName().equalsIgnoreCase(lastName))
