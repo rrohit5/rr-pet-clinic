@@ -2,10 +2,13 @@ package com.petclinic.service.sdjpa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import com.petclinic.convertor.ModelDTOConvertor;
+import com.petclinic.dto.VetDTO;
 import com.petclinic.model.Vet;
 import com.petclinic.repository.sdjpa.VetRepositorySDJPA;
 import com.petclinic.service.VetService;
@@ -15,35 +18,49 @@ import com.petclinic.service.VetService;
 public class VetServiceSDJPA implements VetService {
 
     private final VetRepositorySDJPA vetRepository;
+    private ModelDTOConvertor convertor;
 
-    public VetServiceSDJPA(VetRepositorySDJPA vetRepository) {
+    public VetServiceSDJPA(VetRepositorySDJPA vetRepository
+							, ModelDTOConvertor convertor) {
         this.vetRepository = vetRepository;
+        this.convertor = convertor;
     }
 
     @Override
-    public List<Vet> findAll() {
+    public List<VetDTO> findAll() {
+    	
         List<Vet> vets = new ArrayList<>();
         vetRepository.findAll().forEach(vets::add);
-        return vets;
+        
+        return vets.stream().map((p) -> convertor.convert(p))
+        		.collect(Collectors.toList());
     }
 
     @Override
-    public Vet findById(Long aLong) {
-        return vetRepository.findById(aLong).orElse(null);
+    public VetDTO findById(String id) {
+    	
+    	Vet vet = vetRepository.findById(Long.valueOf(id)).orElse(null); 
+    	
+        return convertor.convert(vet);
     }
 
     @Override
-    public Vet save(Vet object) {
-        return vetRepository.save(object);
+    public VetDTO save(VetDTO vetDTO) {
+    	
+    	Vet vet = vetRepository.save(convertor.convert(vetDTO));
+    	
+        return convertor.convert(vet);
     }
 
     @Override
-    public void delete(Vet object) {
-        vetRepository.delete(object);
+    public void delete(VetDTO vetDTO) {
+    	
+        vetRepository.delete(convertor.convert(vetDTO));
     }
 
     @Override
-    public void deleteById(Long aLong) {
-        vetRepository.deleteById(aLong);
+    public void deleteById(String id) {
+    	
+        vetRepository.deleteById(Long.valueOf(id));
     }
 }

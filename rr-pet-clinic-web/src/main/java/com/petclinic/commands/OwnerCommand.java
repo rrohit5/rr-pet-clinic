@@ -3,6 +3,11 @@ package com.petclinic.commands;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotEmpty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,29 +16,31 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 //@ToString
 
 public class OwnerCommand {
 
 	private String id;
 	
-//	@NotEmpty
+	@NotEmpty
 	private String firstName;
 	
-//	@NotEmpty
+	@NotEmpty
     private String lastName;
 	
-//	@NotEmpty
+	@NotEmpty
     private String address;
 	
-//	@NotEmpty
+	@NotEmpty
     private String city;
 	
-//	@NotEmpty
-//	@Digits(fraction = 0, integer = 10)
+	@NotEmpty
+	@Digits(fraction = 0, integer = 10)
     private String telephone;
 	
-	
+	@Builder.Default
     private Set<PetCommand> pets = new HashSet<>();
 
     

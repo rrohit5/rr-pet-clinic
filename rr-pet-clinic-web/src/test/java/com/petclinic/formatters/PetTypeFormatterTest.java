@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.petclinic.commands.PetTypeCommand;
-import com.petclinic.model.PetType;
+import com.petclinic.dto.PetTypeDTO;
 import com.petclinic.service.PetTypeService;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +30,7 @@ public class PetTypeFormatterTest {
 
 	Locale locale;
 
-	List<PetType> petTypes;
+	List<PetTypeDTO> petTypes;
 
 	@BeforeEach
 	public void setUp() {
@@ -39,12 +39,12 @@ public class PetTypeFormatterTest {
 		
 //		petTypeFormatter = new PetTypeFormatter(petTypeService);
 
-		PetType pet = new PetType();
-		pet.setId(1L);
+		PetTypeDTO pet = new PetTypeDTO();
+		pet.setId("1");
 		pet.setName("Dog");
 
-		PetType pet2 = new PetType();
-		pet2.setId(2L);
+		PetTypeDTO pet2 = new PetTypeDTO();
+		pet2.setId("2");
 		pet2.setName("Cat");
 
 		petTypes = new ArrayList<>();

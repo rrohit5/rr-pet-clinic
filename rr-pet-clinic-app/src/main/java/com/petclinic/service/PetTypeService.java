@@ -1,7 +1,7 @@
 package com.petclinic.service;
 
-import com.petclinic.model.PetType;
+import com.petclinic.dto.PetTypeDTO;
 
-public interface PetTypeService extends CrudService<PetType, Long> {
+public interface PetTypeService extends CrudService<PetTypeDTO, String> {
 
 }

@@ -10,9 +10,13 @@ import java.util.NoSuchElementException;
 import com.petclinic.model.BaseEntity;
 
 //since all our model(T) extends BaseEntity class, we will make T extend BaseEntity below.
-public abstract class AbstractMapService <T extends BaseEntity, ID extends Long> {
+//public abstract class AbstractMapService <T extends BaseEntity, ID extends Long> {
 //public abstract class AbstractMapService <T, ID extends Long> {
 //public abstract class AbstractMapService <T, ID> {   //getNextId() comments
+
+
+
+public abstract class AbstractMapService <T extends BaseEntity, ID extends Long> {
 
 	protected Map<Long, T> map = new HashMap<Long, T>();
 //	protected Map<ID, T> map = new HashMap<ID, T>();   //getNextId() comments

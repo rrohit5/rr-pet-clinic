@@ -19,6 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.petclinic.convertor.ModelDTOConvertor;
+import com.petclinic.dto.VetDTO;
 import com.petclinic.model.Vet;
 import com.petclinic.repository.sdjpa.VetRepositorySDJPA;
 
@@ -30,33 +32,42 @@ public class VetServiceTestSDJPA {
 
 	@InjectMocks
 	VetServiceSDJPA service;
+	
+	@Mock
+    private ModelDTOConvertor convertor1;
+    
+    private ModelDTOConvertor convertor;
 
 	Vet vet1;
 	Vet vet2;
-	List<Vet> vets;
-
+	
+	VetDTO vetDTO1;
+	VetDTO vetDTO2;
+	
 	@BeforeEach
 	void setUp() {
-
-		vet1 = new Vet();
-		vet1.setId(1l);
-
-		vet2 = new Vet();
-		vet2.setId(2l);
 		
-		vets = new ArrayList<>();
+		convertor = new ModelDTOConvertor();
 
-		vets.add(vet1);
-		vets.add(vet2);
+		vet1 = Vet.builder().id(1l).firstName("vetFirstName1").lastName("vetLastName1").build();
+		vet2 = Vet.builder().id(2l).firstName("vetFirstName2").lastName("vetLastName2").build();
 
+		vetDTO1 = convertor.convert(vet1);
+		vetDTO2 = convertor.convert(vet2);
 	}
 
 	@Test
 	public void findAll() {
+		
+		List<Vet> vets = new ArrayList<>();
+		vets.add(vet1);
+		vets.add(vet2);
+		
+		when(convertor1.convert(any(Vet.class))).thenReturn(vetDTO1);
 
 		when(repository.findAll()).thenReturn(vets);
 
-		List<Vet> returnedvets = service.findAll();
+		List<VetDTO> returnedvets = service.findAll();
 
 		assertNotNull(returnedvets);
 		assertEquals(2, returnedvets.size());
@@ -64,10 +75,12 @@ public class VetServiceTestSDJPA {
 
 	@Test
 	public void findById() {
+		
+		when(convertor1.convert(any(Vet.class))).thenReturn(vetDTO1);
 
 		when(repository.findById(anyLong())).thenReturn(Optional.of(vet1));
 
-		Vet sp = service.findById(1L);
+		VetDTO sp = service.findById("1");
 
 		assertNotNull(sp);
 	}
@@ -75,9 +88,13 @@ public class VetServiceTestSDJPA {
 	@Test
 	public void save() {
 		
+		when(convertor1.convert(any(Vet.class))).thenReturn(vetDTO1);
+		
+		when(convertor1.convert(any(VetDTO.class))).thenReturn(vet1);
+		
 		when(repository.save(any())).thenReturn(vet1);
 		
-		Vet sp = service.save(vet1);
+		VetDTO sp = service.save(vetDTO1);
 				
 		assertNotNull(sp);
 
@@ -86,7 +103,10 @@ public class VetServiceTestSDJPA {
 	
     @Test
     void delete() {
-    	service.delete(vet1);
+    	
+    	when(convertor1.convert(any(VetDTO.class))).thenReturn(vet1);
+    	
+    	service.delete(vetDTO1);
 
         //default is 1 times
         verify(repository, times(1)).delete(any());
@@ -94,7 +114,8 @@ public class VetServiceTestSDJPA {
 
     @Test
     void deleteById() {
-    	service.deleteById(1L);
+    	
+    	service.deleteById("1");
 
         verify(repository).deleteById(anyLong());
     }

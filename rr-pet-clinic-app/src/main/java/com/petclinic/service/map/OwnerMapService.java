@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.petclinic.model.Owner;
 import com.petclinic.model.Pet;
-import com.petclinic.service.OwnerService;
-import com.petclinic.service.PetService;
-import com.petclinic.service.PetTypeService;
 
 /*
  * 1- AbstractMapService methods are not marked public while the Intf CrudService are public by default.
@@ -17,15 +14,15 @@ import com.petclinic.service.PetTypeService;
  */
 @Service
 @Profile({"map"})
-public class OwnerMapService extends AbstractMapService<Owner, Long> implements OwnerService{ 
+public class OwnerMapService extends AbstractMapService<Owner, Long>{ 
 
 //implements CrudService<Owner, Long>{
 	
 	
-	private final PetTypeService petTypeService;
-    private final PetService petService;
+	private final PetTypeMapService petTypeService;
+    private final PetMapService petService;
 
-    public OwnerMapService(PetTypeService petTypeService, PetService petService) {
+    public OwnerMapService(PetTypeMapService petTypeService, PetMapService petService) {
         this.petTypeService = petTypeService;
         this.petService = petService;
     }
@@ -87,7 +84,6 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
 		super.delete(object);
 	}
 
-	@Override
 	public Owner findByLastName(String lastName) {
 		
 		 return this.findAll()
@@ -97,7 +93,6 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
 	                .orElse(null);
 	}
 	
-	@Override
     public List<Owner> findAllByLastNameLike(String lastName) {
 
         //todo - impl

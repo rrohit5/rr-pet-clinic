@@ -9,7 +9,7 @@ import org.springframework.format.Formatter;
 import org.springframework.stereotype.Component;
 
 import com.petclinic.commands.PetTypeCommand;
-import com.petclinic.model.PetType;
+import com.petclinic.dto.PetTypeDTO;
 import com.petclinic.service.PetTypeService;
 
 @Component
@@ -30,9 +30,9 @@ public class PetTypeFormatter implements Formatter<PetTypeCommand> {
 
     @Override
     public PetTypeCommand parse(String text, Locale locale) throws ParseException {
-        Collection<PetType> findPetTypes = petTypeService.findAll();
+        Collection<PetTypeDTO> findPetTypes = petTypeService.findAll();
 
-        for (PetType type : findPetTypes) {
+        for (PetTypeDTO type : findPetTypes) {
             if (type.getName().equals(text)) {
             	
             	PetTypeCommand typeCmd = mapper.map(type, PetTypeCommand.class);

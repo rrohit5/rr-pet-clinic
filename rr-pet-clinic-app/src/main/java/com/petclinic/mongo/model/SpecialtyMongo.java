@@ -1,0 +1,32 @@
+package com.petclinic.mongo.model;
+
+import javax.persistence.Id;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+
+@Document
+public class SpecialtyMongo {
+	
+	@Id
+	private String id;
+	private String name;
+	
+	public boolean isNew() {
+        return this.id == null;
+    }
+
+}

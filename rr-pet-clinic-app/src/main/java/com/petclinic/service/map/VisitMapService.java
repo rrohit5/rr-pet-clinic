@@ -6,11 +6,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.petclinic.model.Visit;
-import com.petclinic.service.VisitService;
 
 @Service
 @Profile({"map"})
-public class VisitMapService extends AbstractMapService<Visit, Long> implements VisitService {
+public class VisitMapService extends AbstractMapService<Visit, Long>{
 
     @Override
     public List<Visit> findAll() {
@@ -43,7 +42,7 @@ public class VisitMapService extends AbstractMapService<Visit, Long> implements 
         super.deleteById(id);
     }
 
-	@Override
+//	@Override
 	public List<Visit> findVisitsByPetId(Long petId) {
 		// TODO Auto-generated method stub
 		return null;

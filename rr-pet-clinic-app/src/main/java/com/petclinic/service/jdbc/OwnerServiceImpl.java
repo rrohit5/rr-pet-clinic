@@ -1,11 +1,15 @@
 package com.petclinic.service.jdbc;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.petclinic.convertor.ModelDTOConvertor;
+import com.petclinic.dto.OwnerDTO;
 import com.petclinic.model.Owner;
 import com.petclinic.repository.jdbc.OwnerRepository;
 import com.petclinic.service.OwnerService;
@@ -15,52 +19,65 @@ import com.petclinic.service.OwnerService;
 public class OwnerServiceImpl implements OwnerService {
 	
 	private OwnerRepository ownerRepository;
+	
+	private ModelDTOConvertor convertor;
 
-	public OwnerServiceImpl(OwnerRepository ownerRepository) {
+	public OwnerServiceImpl(OwnerRepository ownerRepository
+							, ModelDTOConvertor convertor) {
 		this.ownerRepository = ownerRepository;
+		this.convertor = convertor;
 	}
 
 	@Override
-	public List<Owner> findAll() {
+	public List<OwnerDTO> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Owner findById(Long id) {
+	public OwnerDTO findById(String id) {
+		
+		Owner owner = ownerRepository.findById(Long.valueOf(id)).get(); 
 
-		return ownerRepository.findById(id).get();
+		return convertor.convert(owner);
 	}
 
 	@Override
 	@Transactional
-	public Owner save(Owner owner) {
+	public OwnerDTO save(OwnerDTO ownerDTO) {
 
-		return ownerRepository.save(owner);
+		Owner owner = convertor.convert(ownerDTO);
+		
+		owner = ownerRepository.save(owner);
+				
+		return convertor.convert(owner);
 	}
 
 	@Override
-	public void delete(Owner object) {
+	public void delete(OwnerDTO object) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteById(Long id) {
+	public void deleteById(String id) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Owner> findAllByLastNameLike(String lastName) {
+	public List<OwnerDTO> findAllByLastNameLike(String lastName) {
 
-		return ownerRepository.findAllByLastNameLike(lastName);
+		List<OwnerDTO> list = ownerRepository.findAllByLastNameLike(lastName)
+									.stream().map((p) -> convertor.convert(p))
+									.collect(Collectors.toList());		
+		return list;
 	}
 
 	@Override
-	public Owner findByLastName(String lastName) {
+	public OwnerDTO findByLastName(String lastName) {
 		// TODO Auto-generated method stub
 		return null;
 	}

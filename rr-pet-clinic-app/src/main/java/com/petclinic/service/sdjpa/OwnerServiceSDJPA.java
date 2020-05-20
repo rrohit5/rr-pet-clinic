@@ -2,10 +2,13 @@ package com.petclinic.service.sdjpa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import com.petclinic.convertor.ModelDTOConvertor;
+import com.petclinic.dto.OwnerDTO;
 import com.petclinic.model.Owner;
 import com.petclinic.repository.sdjpa.OwnerRepositorySDJPA;
 import com.petclinic.service.OwnerService;
@@ -15,50 +18,73 @@ import com.petclinic.service.OwnerService;
 public class OwnerServiceSDJPA implements OwnerService {
 
     private final OwnerRepositorySDJPA ownerRepository;
+    
+    private ModelDTOConvertor convertor;
 
-    public OwnerServiceSDJPA(OwnerRepositorySDJPA ownerRepository) {
+    public OwnerServiceSDJPA(OwnerRepositorySDJPA ownerRepository
+						, ModelDTOConvertor convertor) {
         this.ownerRepository = ownerRepository;
+    	this.convertor = convertor;
     }
 
     @Override
-    public Owner findByLastName(String lastName) {
-        return ownerRepository.findByLastName(lastName);
+    public OwnerDTO findByLastName(String lastName) {
+    	
+    	Owner owner = ownerRepository.findByLastName(lastName); 
+    	
+        return convertor.convert(owner);
     }
 
     @Override
-    public List<Owner> findAllByLastNameLike(String lastName) {
-        return ownerRepository.findAllByLastNameLike(lastName);
+    public List<OwnerDTO> findAllByLastNameLike(String lastName) {
+    	
+        return ownerRepository.findAllByLastNameLike(lastName)
+        		.stream().map((p) -> convertor.convert(p)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Owner> findAll() {
+    public List<OwnerDTO> findAll() {
+    	
         List<Owner> owners = new ArrayList<>();
         ownerRepository.findAll().forEach(owners::add);
-        return owners;
-    }
-
-    @Override
-    public Owner findById(Long aLong) {
         
-    /*2&3*/	//Optional<Owner> optionalOwner = ownerRepository.findById(aLong);
-   	/*2*/	//return optionalOwner.get();
-    /*3*/	//return optionalOwner.orElse(null);
+        List<OwnerDTO> list = owners.stream().map((p) -> convertor.convert(p))
+        		.collect(Collectors.toList()); 
+        
+        return list;
+    }
+
+    @Override
+    public OwnerDTO findById(String id) {
+        
+    /*2&3*/	//Optional<OwnerDTO> optionalOwnerDTO = ownerRepository.findById(aLong);
+   	/*2*/	//return optionalOwnerDTO.get();
+    /*3*/	//return optionalOwnerDTO.orElse(null);
     	
-    /*1*/	return ownerRepository.findById(aLong).orElse(null);
+    	Owner owner = ownerRepository.findById(Long.valueOf(id)).orElse(null); 
+    	
+    /*1*/	return convertor.convert(owner);
     }
 
     @Override
-    public Owner save(Owner object) {
-        return ownerRepository.save(object);
+    public OwnerDTO save(OwnerDTO ownerDTO) {
+    	
+    	Owner owner = ownerRepository.save(convertor.convert(ownerDTO));
+    	
+        return convertor.convert(owner);
     }
 
     @Override
-    public void delete(Owner object) {
-        ownerRepository.delete(object);
+    public void delete(OwnerDTO ownerDTO) {
+    	
+    	Owner owner = convertor.convert(ownerDTO);
+    	
+        ownerRepository.delete(owner);
     }
 
     @Override
-    public void deleteById(Long aLong) {
-        ownerRepository.deleteById(aLong);
+    public void deleteById(String id) {
+    	
+        ownerRepository.deleteById(Long.valueOf(id));
     }
 }

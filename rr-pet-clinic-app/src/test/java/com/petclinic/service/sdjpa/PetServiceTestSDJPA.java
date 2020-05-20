@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.petclinic.convertor.ModelDTOConvertor;
+import com.petclinic.dto.PetDTO;
 import com.petclinic.model.Pet;
+import com.petclinic.model.PetType;
 import com.petclinic.repository.sdjpa.PetRepositorySDJPA;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,36 +31,49 @@ public class PetServiceTestSDJPA {
 
 	@Mock
 	PetRepositorySDJPA petRepository;
+	
+	@Mock
+    private ModelDTOConvertor convertor1;
+    
+    private ModelDTOConvertor convertor;
 
 	@InjectMocks
 	PetServiceSDJPA petSDJpaService;
 
 	Pet pet1;
 	Pet pet2;
-	List<Pet> pets;
+	
+	PetDTO petDTO1;
+	PetDTO petDTO2;
 
 	@BeforeEach
 	void setUp() {
-
-		pet1 = new Pet();
-		pet1.setId(1l);
-
-		pet2 = new Pet();
-		pet2.setId(2l);
 		
-		pets = new ArrayList<>();
+		convertor = new ModelDTOConvertor();
+		
+		PetType dogPetType = new PetType(1l, "Dog");
 
-		pets.add(pet1);
-		pets.add(pet2);
+		pet1 = Pet.builder().id(1l).birthDate(LocalDate.now()).name("pet1name").petType(dogPetType).build();
+
+		pet2 = Pet.builder().id(2l).birthDate(LocalDate.now()).name("pet1name").petType(dogPetType).build();
+		
+		petDTO1 = convertor.convert(pet1);
+		petDTO2 = convertor.convert(pet2);
 
 	}
 
 	@Test
 	public void findAll() {
+		
+		List<Pet> pets = new ArrayList<>();
+		pets.add(pet1);
+		pets.add(pet2);
+		
+		when(convertor1.convert(any(Pet.class))).thenReturn(petDTO1);
 
 		when(petRepository.findAll()).thenReturn(pets);
 
-		List<Pet> returnedPests = petSDJpaService.findAll();
+		List<PetDTO> returnedPests = petSDJpaService.findAll();
 
 		assertNotNull(returnedPests);
 		assertEquals(2, returnedPests.size());
@@ -64,10 +81,12 @@ public class PetServiceTestSDJPA {
 
 	@Test
 	public void findById() {
+		
+		when(convertor1.convert(any(Pet.class))).thenReturn(petDTO1);
 
 		when(petRepository.findById(anyLong())).thenReturn(Optional.of(pet1));
 
-		Pet pet = petSDJpaService.findById(1L);
+		PetDTO pet = petSDJpaService.findById("1");
 
 		assertNotNull(pet);
 	}
@@ -75,9 +94,13 @@ public class PetServiceTestSDJPA {
 	@Test
 	public void save() {
 		
+		when(convertor1.convert(any(PetDTO.class))).thenReturn(pet1);
+    	
+    	when(convertor1.convert(any(Pet.class))).thenReturn(petDTO1);
+		
 		when(petRepository.save(any())).thenReturn(pet1);
 		
-		Pet pet = petSDJpaService.save(pet1);
+		PetDTO pet = petSDJpaService.save(petDTO1);
 				
 		assertNotNull(pet);
 
@@ -86,7 +109,10 @@ public class PetServiceTestSDJPA {
 	
     @Test
     void delete() {
-    	petSDJpaService.delete(pet1);
+    	
+    	when(convertor1.convert(any(PetDTO.class))).thenReturn(pet1);
+    	
+    	petSDJpaService.delete(petDTO1);
 
         //default is 1 times
         verify(petRepository, times(1)).delete(any());
@@ -94,7 +120,8 @@ public class PetServiceTestSDJPA {
 
     @Test
     void deleteById() {
-    	petSDJpaService.deleteById(1L);
+    	
+    	petSDJpaService.deleteById("1");
 
         verify(petRepository).deleteById(anyLong());
     }

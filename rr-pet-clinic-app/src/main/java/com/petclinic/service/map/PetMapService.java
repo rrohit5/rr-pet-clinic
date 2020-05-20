@@ -6,11 +6,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.petclinic.model.Pet;
-import com.petclinic.service.PetService;
 
 @Service
 @Profile({"map"})
-public class PetMapService extends AbstractMapService<Pet, Long> implements PetService{ 
+public class PetMapService extends AbstractMapService<Pet, Long> { 
 //implements CrudService<Pet, Long> {
 
 	

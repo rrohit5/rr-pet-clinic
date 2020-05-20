@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -18,8 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.petclinic.commands.PetCommand;
 import com.petclinic.commands.VisitCommand;
-import com.petclinic.model.Pet;
-import com.petclinic.model.Visit;
+import com.petclinic.convertor.CommandDTOConvertor;
+import com.petclinic.dto.PetDTO;
+import com.petclinic.dto.VisitDTO;
 import com.petclinic.service.PetService;
 import com.petclinic.service.VisitService;
 
@@ -29,11 +29,13 @@ public class VisitController {
     private final VisitService visitService;
     private final PetService petService;
     
-    ModelMapper mapper = new ModelMapper();
+    private final CommandDTOConvertor convertor;
 
-    public VisitController(VisitService visitService, PetService petService) {
+    public VisitController(VisitService visitService, PetService petService
+    						, CommandDTOConvertor convertor) {
         this.visitService = visitService;
         this.petService = petService;
+        this.convertor = convertor;
     }
 
     @InitBinder
@@ -52,18 +54,18 @@ public class VisitController {
      * Called before each and every @RequestMapping annotated method.
      * 2 goals:
      * - Make sure we always have fresh data
-     * - Since we do not use the session scope, make sure that Pet object always has an id
+     * - Since we do not use the session scope, make sure that PetDTO object always has an id
      * (Even though id is not part of the form fields)
      *
      * @param petId
-     * @return Pet
+     * @return PetDTO
      */
     @ModelAttribute("visit")
-    public VisitCommand loadPetWithVisit(@PathVariable("petId") Long petId, Map<String, Object> model) {
+    public VisitCommand loadPetWithVisit(@PathVariable("petId") String petId, Map<String, Object> model) {
         
-    	Pet pet = petService.findById(petId);
+    	PetDTO petDTO = petService.findById(petId);
     	
-    	PetCommand petCommand = mapper.map(pet, PetCommand.class);
+    	PetCommand petCommand = convertor.convert(petDTO);
     	
         VisitCommand visitCommand = new VisitCommand();
         petCommand.addVisit(visitCommand);
@@ -77,7 +79,7 @@ public class VisitController {
 
     // Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
     @GetMapping("/owners/*/pets/{petId}/visits/new")
-    public String initNewVisitForm(@PathVariable("petId") Long petId, Map<String, Object> model) {
+    public String initNewVisitForm(@PathVariable("petId") String petId, Map<String, Object> model) {
     	
         return "pets/createOrUpdateVisitForm";
     }
@@ -93,9 +95,9 @@ public class VisitController {
             
         } else {
         	
-        	Visit visit = mapper.map(visitCommand, Visit.class);
+        	VisitDTO visitDTO = convertor.convert(visitCommand);
         	
-            visitService.save(visit);
+            visitService.save(visitDTO);
 
             return "redirect:/owners/{ownerId}";
         }

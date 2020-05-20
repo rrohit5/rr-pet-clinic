@@ -21,33 +21,22 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
+@SuperBuilder
 //@ToString
 
 @Entity
 @Table(name = "pets")
 public class Pet extends NamedEntity {
-
-	// @Builder
-	public Pet(Long id, String name, PetType petType, Owner owner, LocalDate birthDate, Set<Visit> visits) {
-		super(id, name);
-		this.petType = petType;
-		this.owner = owner;
-		this.birthDate = birthDate;
-		// this.visits = visits;
-
-		if (visits == null || visits.size() > 0) {
-			this.visits = visits;
-		}
-	}
 
 	@Column(name = "birth_date")
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
@@ -62,6 +51,7 @@ public class Pet extends NamedEntity {
 	private Owner owner;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.LAZY)
+	@Builder.Default
 	private Set<Visit> visits = new HashSet<>();
 
 	public Pet addVisit(Visit visit) {

@@ -6,11 +6,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.petclinic.model.Specialty;
-import com.petclinic.service.SpecialtyService;
 
 @Service
 @Profile({"map"})
-public class SpecialtyMapService extends AbstractMapService<Specialty, Long> implements SpecialtyService {
+public class SpecialtyMapService extends AbstractMapService<Specialty, Long> {
 	
 	@Override
     public List<Specialty> findAll() {

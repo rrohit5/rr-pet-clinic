@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.petclinic.commands.OwnerCommand;
-import com.petclinic.model.Owner;
+import com.petclinic.convertor.CommandDTOConvertor;
+import com.petclinic.dto.OwnerDTO;
 import com.petclinic.service.OwnerService;
 
 @RequestMapping("/owners")
@@ -27,11 +27,11 @@ public class OwnerController {
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
 
     private final OwnerService ownerService;
+    private final CommandDTOConvertor convertor;
     
-    ModelMapper mapper = new ModelMapper();
-
-    public OwnerController(OwnerService ownerService) {
+    public OwnerController(OwnerService ownerService, CommandDTOConvertor convertor) {
         this.ownerService = ownerService;
+        this.convertor = convertor;
     }
 
     @InitBinder
@@ -71,9 +71,9 @@ public class OwnerController {
             
         } else {
         	
-        	Owner owner = mapper.map(ownerCommand, Owner.class);
+        	OwnerDTO ownerDTO = convertor.convert(ownerCommand);
         	
-            Owner savedOwner =  ownerService.save(owner);
+            OwnerDTO savedOwner =  ownerService.save(ownerDTO);
             return "redirect:/owners/" + savedOwner.getId();
             
         }
@@ -97,8 +97,12 @@ public class OwnerController {
         }
 
         // find owners by last name
-//        List<Owner> results = ownerService.findByLastName(ownerCommand.getLastName());
-        List<Owner> results = ownerService.findAllByLastNameLike("%"+ ownerCommand.getLastName() + "%");
+//        List<OwnerDTO> results = ownerService.findByLastName(ownerCommand.getLastName());
+        List<OwnerDTO> results = 
+        		
+        		//ownerService.findAll();
+        		
+        		ownerService.findAllByLastNameLike("%"+ ownerCommand.getLastName() + "%");
 
         if (results.isEmpty()) {
         	
@@ -108,9 +112,9 @@ public class OwnerController {
             
         } else if (results.size() == 1) {
         	
-            // 1 owner found
-            Owner owner = results.get(0);
-            return "redirect:/owners/" + owner.getId();
+            // 1 ownerDTO found
+            OwnerDTO ownerDTO = results.get(0);
+            return "redirect:/owners/" + ownerDTO.getId();
             
         } else {
         	
@@ -123,9 +127,9 @@ public class OwnerController {
     
     
     @GetMapping("/{ownerId}/edit")
-    public String initUpdateOwnerForm(@PathVariable Long ownerId, Model model) {
+    public String initUpdateOwnerForm(@PathVariable String ownerId, Model model) {
     	
-    	OwnerCommand ownerCommand = mapper.map(ownerService.findById(ownerId), OwnerCommand.class);
+    	OwnerCommand ownerCommand = convertor.convert(ownerService.findById(ownerId));
     	
         model.addAttribute("owner", ownerCommand);
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
@@ -134,7 +138,7 @@ public class OwnerController {
 
     @PostMapping("/{ownerId}/edit")
     public String processUpdateOwnerForm(@Valid @ModelAttribute("owner") OwnerCommand ownerCommand
-    									, BindingResult result, @PathVariable Long ownerId) {
+    									, BindingResult result, @PathVariable String ownerId) {
     	
         if (result.hasErrors()) {
         	
@@ -142,10 +146,10 @@ public class OwnerController {
             
         } else {
         	
-        	Owner owner = mapper.map(ownerCommand, Owner.class);
+        	OwnerDTO ownerDTO = convertor.convert(ownerCommand);
         	
-            owner.setId(ownerId);
-            Owner savedOwner = ownerService.save(owner);
+            ownerDTO.setId(ownerId);
+            OwnerDTO savedOwner = ownerService.save(ownerDTO);
             return "redirect:/owners/" + savedOwner.getId();
             
         }
@@ -155,10 +159,13 @@ public class OwnerController {
 	
 	@GetMapping("/{ownerId}")
 //    public ModelAndView showOwner(@PathVariable("ownerId") Long ownerId) {
-	 public ModelAndView showOwner(@PathVariable Long ownerId) {
+	 public ModelAndView showOwner(@PathVariable String ownerId) {
 		
         ModelAndView mav = new ModelAndView("owners/ownerDetails");
-        mav.addObject(ownerService.findById(ownerId));
+        
+        OwnerCommand ownerCommand = convertor.convert(ownerService.findById(ownerId)); 
+        
+        mav.addObject("owner", ownerCommand);
         return mav;
         
     }

@@ -6,12 +6,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.petclinic.model.Owner;
-import com.petclinic.model.Pet;
-import com.petclinic.model.PetType;
-import com.petclinic.model.Specialty;
-import com.petclinic.model.Vet;
-import com.petclinic.model.Visit;
+import com.petclinic.dto.OwnerDTO;
+import com.petclinic.dto.PetDTO;
+import com.petclinic.dto.PetTypeDTO;
+import com.petclinic.dto.SpecialtyDTO;
+import com.petclinic.dto.VetDTO;
+import com.petclinic.dto.VisitDTO;
 import com.petclinic.service.OwnerService;
 import com.petclinic.service.PetTypeService;
 import com.petclinic.service.SpecialtyService;
@@ -19,7 +19,7 @@ import com.petclinic.service.VetService;
 import com.petclinic.service.VisitService;
 
 @Component
-@Profile({"h2"})
+@Profile({"h2", "mongo"})
 public class DataLoader implements CommandLineRunner {
 
 	private final OwnerService ownerService;
@@ -52,27 +52,27 @@ public class DataLoader implements CommandLineRunner {
 	
 	private void loadData() {
 		
-		PetType dog = new PetType();
+		PetTypeDTO dog = new PetTypeDTO();
 		dog.setName("Dog");
-		PetType savedDogPetType = petTypeService.save(dog);
+		PetTypeDTO savedDogPetType = petTypeService.save(dog);
 
-		PetType cat = new PetType();
+		PetTypeDTO cat = new PetTypeDTO();
 		cat.setName("Cat");
-		PetType savedCatPetType = petTypeService.save(cat);
+		PetTypeDTO savedCatPetType = petTypeService.save(cat);
 		
-		Specialty radiology = new Specialty();
+		SpecialtyDTO radiology = new SpecialtyDTO();
         radiology.setName("Radiology");
-        Specialty savedRadiology = specialtyService.save(radiology);
+        SpecialtyDTO savedRadiology = specialtyService.save(radiology);
 
-        Specialty surgery = new Specialty();
+        SpecialtyDTO surgery = new SpecialtyDTO();
         surgery.setName("Surgery");
-        Specialty savedSurgery = specialtyService.save(surgery);
+        SpecialtyDTO savedSurgery = specialtyService.save(surgery);
 
-        Specialty dentistry = new Specialty();
-        dentistry.setName("dentistry");
-        Specialty savedDentistry = specialtyService.save(dentistry);
+        SpecialtyDTO dentistry = new SpecialtyDTO();
+        dentistry.setName("Dentistry");
+        SpecialtyDTO savedDentistry = specialtyService.save(dentistry);
 
-		Owner owner1 = new Owner();
+		OwnerDTO owner1 = new OwnerDTO();
 		// remove ID parameter as we are generating it automatically
 //	        owner1.setId(1L);
 		owner1.setFirstName("Michael");
@@ -81,7 +81,7 @@ public class DataLoader implements CommandLineRunner {
         owner1.setCity("Miami");
         owner1.setTelephone("1231231234");
         
-        Pet mikesPet = new Pet();
+        PetDTO mikesPet = new PetDTO();
         mikesPet.setPetType(savedDogPetType);
         mikesPet.setOwner(owner1);
         mikesPet.setBirthDate(LocalDate.now());
@@ -90,7 +90,7 @@ public class DataLoader implements CommandLineRunner {
 
 		ownerService.save(owner1);
 
-		Owner owner2 = new Owner();
+		OwnerDTO owner2 = new OwnerDTO();
 		// remove ID parameter as we are generating it automatically
 //	        owner2.setId(2L);
 		owner2.setFirstName("Fiona");
@@ -99,25 +99,18 @@ public class DataLoader implements CommandLineRunner {
         owner2.setCity("Miami");
         owner2.setTelephone("1231231234");
 
-        Pet fionasCat = new Pet();
+        PetDTO fionasCat = new PetDTO();
         fionasCat.setName("Just Cat");
         fionasCat.setOwner(owner2);
         fionasCat.setBirthDate(LocalDate.now());
         fionasCat.setPetType(savedCatPetType);
         owner2.getPets().add(fionasCat);
 
-		ownerService.save(owner2);
+		OwnerDTO ownerSaved =  ownerService.save(owner2);
 		
-		Visit catVisit = new Visit();
-        catVisit.setPet(fionasCat);
-        catVisit.setDate(LocalDate.now());
-        catVisit.setDescription("Sneezy Kitty");
-
-        visitService.save(catVisit);
-
 		System.out.println("Loaded Owners....");
 
-		Vet vet1 = new Vet();
+		VetDTO vet1 = new VetDTO();
 		// remove ID parameter as we are generating it automatically
 //	        vet1.setId(1L);
 		vet1.setFirstName("Sam");
@@ -126,7 +119,7 @@ public class DataLoader implements CommandLineRunner {
 
 		vetService.save(vet1);
 
-		Vet vet2 = new Vet();
+		VetDTO vet2 = new VetDTO();
 		// remove ID parameter as we are generating it automatically
 //	        vet2.setId(2L);
 		vet2.setFirstName("Jessie");
@@ -135,7 +128,7 @@ public class DataLoader implements CommandLineRunner {
 
 		vetService.save(vet2);
 		
-		Vet vet3 = new Vet();
+		VetDTO vet3 = new VetDTO();
 		// remove ID parameter as we are generating it automatically
 //	        vet2.setId(2L);
 		vet3.setFirstName("Jacky");
@@ -145,6 +138,14 @@ public class DataLoader implements CommandLineRunner {
 		vetService.save(vet3);
 
 		System.out.println("Loaded Vets....");
+		
+		VisitDTO catVisit = new VisitDTO();
+        catVisit.setPet(ownerSaved.getPet("Just Cat"));
+        catVisit.setDate(LocalDate.now());
+        catVisit.setDescription("Sneezy Kitty");
+
+//        visitService.save(catVisit);
+
 	}
 
 }

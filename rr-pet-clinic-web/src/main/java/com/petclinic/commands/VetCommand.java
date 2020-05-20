@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
+@Builder
 //@ToString
 
 public class VetCommand {
@@ -26,7 +27,11 @@ public class VetCommand {
 //	@NotEmpty
     private String lastName;
 	
+    @Builder.Default
 	private Set<SpecialtyCommand> specialties = new HashSet<>();
-
-
+    
+    
+    public void addSpecialty(SpecialtyCommand specialty) {
+		getSpecialties().add(specialty);
+	}
 }

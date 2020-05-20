@@ -1,8 +1,8 @@
 package com.petclinic.service;
 
-import com.petclinic.model.Vet;
+import com.petclinic.dto.VetDTO;
 
-public interface VetService extends CrudService<Vet, Long> {//<T, ID>--satisfy the generic declaration for the class.
+public interface VetService extends CrudService<VetDTO, String> {//<T, ID>--satisfy the generic declaration for the class.
 	
 //	Vet findById(Long id);
 //	Vet save(Vet vet);

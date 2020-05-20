@@ -19,6 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.petclinic.convertor.ModelDTOConvertor;
+import com.petclinic.dto.PetTypeDTO;
 import com.petclinic.model.PetType;
 import com.petclinic.repository.sdjpa.PetTypeRepositorySDJPA;
 
@@ -27,36 +29,46 @@ public class PetTypeServiceTestSDJPA {
 
 	@Mock
 	PetTypeRepositorySDJPA repository;
+	
+	@Mock
+    private ModelDTOConvertor convertor1;
+    
+    private ModelDTOConvertor convertor;
 
 	@InjectMocks
 	PetTypeServiceSDJPA service;
 
 	PetType petType1;
 	PetType petType2;
-	List<PetType> petTypes;
+	
+	PetTypeDTO petTypeDTO1;
+	PetTypeDTO petTypeDTO2;
 
 	@BeforeEach
 	void setUp() {
-
-		petType1 = new PetType();
-		petType1.setId(1l);
-
-		petType2 = new PetType();
-		petType2.setId(2l);
-
-		petTypes = new ArrayList<>();
 		
-		petTypes.add(petType1);
-		petTypes.add(petType2);
+		convertor = new ModelDTOConvertor();
 
+		petType1 =  new PetType(1l, "Dog");
+		petType2 = new PetType(2l, "Cat");
+		
+		petTypeDTO1 = convertor.convert(petType1);
+		petTypeDTO2 = convertor.convert(petType2);
 	}
 
 	@Test
 	public void findAll() {
+		
+		List<PetType> petTypes = new ArrayList<>();
+		
+		petTypes.add(petType1);
+		petTypes.add(petType2);
+		
+		when(convertor1.convert(any(PetType.class))).thenReturn(petTypeDTO1);
 
 		when(repository.findAll()).thenReturn(petTypes);
 
-		List<PetType> returnedPetTypes = service.findAll();
+		List<PetTypeDTO> returnedPetTypes = service.findAll();
 
 		assertNotNull(returnedPetTypes);
 		assertEquals(2, returnedPetTypes.size());
@@ -64,10 +76,12 @@ public class PetTypeServiceTestSDJPA {
 
 	@Test
 	public void findById() {
+		
+		when(convertor1.convert(any(PetType.class))).thenReturn(petTypeDTO1);
 
 		when(repository.findById(anyLong())).thenReturn(Optional.of(petType1));
 
-		PetType petType = service.findById(1L);
+		PetTypeDTO petType = service.findById("1");
 
 		assertNotNull(petType);
 	}
@@ -75,9 +89,13 @@ public class PetTypeServiceTestSDJPA {
 	@Test
 	public void save() {
 		
+		when(convertor1.convert(any(PetTypeDTO.class))).thenReturn(petType1);
+    	
+    	when(convertor1.convert(any(PetType.class))).thenReturn(petTypeDTO1);
+		
 		when(repository.save(any())).thenReturn(petType1);
 		
-		PetType petType = service.save(petType1);
+		PetTypeDTO petType = service.save(petTypeDTO1);
 				
 		assertNotNull(petType);
 
@@ -86,7 +104,10 @@ public class PetTypeServiceTestSDJPA {
 	
     @Test
     void delete() {
-    	service.delete(petType1);
+    	
+    	when(convertor1.convert(any(PetTypeDTO.class))).thenReturn(petType1);
+    	
+    	service.delete(petTypeDTO1);
 
         //default is 1 times
         verify(repository, times(1)).delete(any());
@@ -94,7 +115,8 @@ public class PetTypeServiceTestSDJPA {
 
     @Test
     void deleteById() {
-    	service.deleteById(1L);
+    	
+    	service.deleteById("1");
 
         verify(repository).deleteById(anyLong());
     }

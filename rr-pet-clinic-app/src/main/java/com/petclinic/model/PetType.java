@@ -10,14 +10,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
 //@Builder
 
 @Entity
 @Table(name = "types")
 public class PetType  extends NamedEntity {
 	
-//	@Builder
 	public PetType(Long id, String name) {
 		super(id, name);	
 	}

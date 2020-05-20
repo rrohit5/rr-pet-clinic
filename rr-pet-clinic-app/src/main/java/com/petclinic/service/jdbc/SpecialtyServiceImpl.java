@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import com.petclinic.model.Specialty;
+import com.petclinic.dto.SpecialtyDTO;
 import com.petclinic.service.SpecialtyService;
 
 @Service
@@ -13,33 +13,35 @@ import com.petclinic.service.SpecialtyService;
 public class SpecialtyServiceImpl implements SpecialtyService {
 
 	@Override
-	public List<Specialty> findAll() {
+	public List<SpecialtyDTO> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Specialty findById(Long id) {
+	public SpecialtyDTO findById(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Specialty save(Specialty object) {
+	public SpecialtyDTO save(SpecialtyDTO object) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void delete(Specialty object) {
+	public void delete(SpecialtyDTO object) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteById(Long id) {
+	public void deleteById(String id) {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 
 }

@@ -2,9 +2,9 @@ package com.petclinic.service;
 
 import java.util.List;
 
-import com.petclinic.model.Owner;
+import com.petclinic.dto.OwnerDTO;
 
-public interface OwnerService extends CrudService<Owner, Long>{//<T, ID>--satisfy the generic declaration for the class.
+public interface OwnerService extends CrudService<OwnerDTO, String>{//<T, ID>--satisfy the generic declaration for the class.
 
 //	Owner findById(Long id);
 //	Owner save(Owner owner);
@@ -13,7 +13,7 @@ public interface OwnerService extends CrudService<Owner, Long>{//<T, ID>--satisf
 	/*All the above common methods have been moved to CrudService 
 	and make this class extend the CrudService class.*/
 	
-	List<Owner> findAllByLastNameLike(String lastName);
+	List<OwnerDTO> findAllByLastNameLike(String lastName);
 
-	Owner findByLastName(String lastName);
+	OwnerDTO findByLastName(String lastName);
 }

@@ -20,6 +20,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.petclinic.convertor.ModelDTOConvertor;
+import com.petclinic.dto.OwnerDTO;
 import com.petclinic.model.Owner;
 import com.petclinic.repository.sdjpa.OwnerRepositorySDJPA;
 import com.petclinic.repository.sdjpa.PetRepositorySDJPA;
@@ -28,7 +30,7 @@ import com.petclinic.repository.sdjpa.PetTypeRepositorySDJPA;
 @ExtendWith(MockitoExtension.class)
 class OwnerServiceTestSDJPA {
 
-    public static final String LAST_NAME = "Smith";
+    public static final String LAST_NAME = "ownerLastName1";
     @Mock
     OwnerRepositorySDJPA ownerRepository;
 
@@ -37,29 +39,58 @@ class OwnerServiceTestSDJPA {
 
     @Mock
     PetTypeRepositorySDJPA petTypeRepository;
+    
+    @Mock
+    private ModelDTOConvertor convertor1;
+    
+    private ModelDTOConvertor convertor;
 
     @InjectMocks
     OwnerServiceSDJPA service;
 
-    Owner returnOwner;
+    Owner owner1;
+    Owner owner2;
+    
+    OwnerDTO ownerDTO1;
+    OwnerDTO ownerDTO2;
 
     @BeforeEach
     void setUp() {
     	
-    	Owner owner = new Owner();
-        owner.setId(1l);
-        owner.setLastName(LAST_NAME);
+    	convertor = new ModelDTOConvertor();
+    	
+    	owner1 = Owner.builder().id(1l).address("ownerAddress1").city("ownerCity1").firstName("ownerFirstName1").lastName("ownerLastName1")
+				.telephone("ownerTelephone1").build();
+    	
+    	owner2 = Owner.builder().id(2l).address("ownerAddress2").city("ownerCity2").firstName("ownerFirstName2").lastName("ownerLastName2")
+				.telephone("ownerTelephone2").build();
         
-        returnOwner = owner;
+    	ownerDTO1 = convertor.convert(owner1);
+    	ownerDTO2 = convertor.convert(owner2);
+    	
+    	
+//    	removing mocks from here to local methods
+    	
+//    	when(convertor1.convert(any(OwnerDTO.class))).thenReturn(owner1);
+		/*
+		  org.mockito.exceptions.misusing.UnnecessaryStubbingException: Unnecessary
+		  stubbings detected. Clean & maintainable test code requires zero unnecessary
+		  code.
+		 */
+    	//when(convertor1.convert(any(Owner.class))).thenReturn(ownerDTO1);
+    	
     }
 
     @Test
     void findByLastName() {
-        when(ownerRepository.findByLastName(any())).thenReturn(returnOwner);
+    	
+    	when(convertor1.convert(any(Owner.class))).thenReturn(ownerDTO1);
+    	
+        when(ownerRepository.findByLastName(any())).thenReturn(owner1);
+        
+        OwnerDTO ownerDTO = service.findByLastName(LAST_NAME);
 
-        Owner smith = service.findByLastName(LAST_NAME);
-
-        assertEquals(LAST_NAME, smith.getLastName());
+        assertEquals(LAST_NAME, ownerDTO.getLastName());
 
         verify(ownerRepository).findByLastName(any());
     }
@@ -67,16 +98,18 @@ class OwnerServiceTestSDJPA {
     @Test
     void findAllByLastNameLike() {
     	
-    	List<Owner> returnOwnersList = new ArrayList<Owner>();
-    	returnOwnersList.add(returnOwner);
+    	List<Owner> ownerList = new ArrayList<Owner>();
+    	ownerList.add(owner1);
     	
-        when(ownerRepository.findAllByLastNameLike(any())).thenReturn(returnOwnersList);
+    	when(convertor1.convert(any(Owner.class))).thenReturn(ownerDTO1);
+    	
+        when(ownerRepository.findAllByLastNameLike(any())).thenReturn(ownerList);
 
-        List<Owner> owners = service.findAllByLastNameLike(LAST_NAME);
+        List<OwnerDTO> owners = service.findAllByLastNameLike(LAST_NAME);
         
-        Owner smith = owners.get(0);
+        OwnerDTO ownerDTO = owners.get(0);
 
-        assertEquals(LAST_NAME, smith.getLastName());
+        assertEquals(LAST_NAME, ownerDTO.getLastName());
 
         verify(ownerRepository).findAllByLastNameLike(any());
     }
@@ -84,19 +117,15 @@ class OwnerServiceTestSDJPA {
     @Test
     void findAll() {
         
-    	List<Owner> returnOwnersList = new ArrayList<>();
-    	
-    	Owner owner = new Owner();
-        owner.setId(1l);        
-        returnOwnersList.add(owner);
+    	List<Owner> ownerList = new ArrayList<>();
+    	ownerList.add(owner1);
+        ownerList.add(owner2);
+
+        when(convertor1.convert(any(Owner.class))).thenReturn(ownerDTO1);
         
-        Owner owner2 = new Owner();
-        owner2.setId(2l);
-        returnOwnersList.add(owner2);
+        when(ownerRepository.findAll()).thenReturn(ownerList);
 
-        when(ownerRepository.findAll()).thenReturn(returnOwnersList);
-
-        List<Owner> owners = service.findAll();
+        List<OwnerDTO> owners = service.findAll();
 
         assertNotNull(owners);
         assertEquals(2, owners.size());
@@ -104,18 +133,24 @@ class OwnerServiceTestSDJPA {
 
     @Test
     void findById() {
-        when(ownerRepository.findById(anyLong())).thenReturn(Optional.of(returnOwner));
+    	
+    	when(convertor1.convert(any(Owner.class))).thenReturn(ownerDTO1);
+    	
+        when(ownerRepository.findById(anyLong())).thenReturn(Optional.of(owner1));
 
-        Owner owner = service.findById(1L);
+        OwnerDTO owner = service.findById("1");
 
         assertNotNull(owner);
     }
 
     @Test
     void findByIdNotFound() {
+    	
+//    	when(convertor1.convert(any(null))).thenReturn(null);
+    	
         when(ownerRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Owner owner = service.findById(1L);
+        OwnerDTO owner = service.findById("1");
 
         assertNull(owner);
     }
@@ -124,14 +159,13 @@ class OwnerServiceTestSDJPA {
     @Test
     void save() {
     	
-    	Owner owner = new Owner();
-        owner.setId(1l);
-        
-        Owner ownerToSave = owner;
+    	when(convertor1.convert(any(OwnerDTO.class))).thenReturn(owner1);
+    	
+    	when(convertor1.convert(any(Owner.class))).thenReturn(ownerDTO1);
+    	
+    	when(ownerRepository.save(any())).thenReturn(owner1);
 
-        when(ownerRepository.save(any())).thenReturn(returnOwner);
-
-        Owner savedOwner = service.save(ownerToSave);
+        OwnerDTO savedOwner = service.save(ownerDTO1);
 
         assertNotNull(savedOwner);
 
@@ -140,7 +174,10 @@ class OwnerServiceTestSDJPA {
 
     @Test
     void delete() {
-        service.delete(returnOwner);
+    	
+    	when(convertor1.convert(any(OwnerDTO.class))).thenReturn(owner1);
+    	
+    	service.delete(ownerDTO1);
 
         //default is 1 times
         verify(ownerRepository, times(1)).delete(any());
@@ -148,7 +185,8 @@ class OwnerServiceTestSDJPA {
 
     @Test
     void deleteById() {
-        service.deleteById(1L);
+    	
+        service.deleteById("1");
 
         verify(ownerRepository).deleteById(anyLong());
     }

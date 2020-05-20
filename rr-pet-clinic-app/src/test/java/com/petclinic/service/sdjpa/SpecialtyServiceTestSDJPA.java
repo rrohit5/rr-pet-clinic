@@ -19,6 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.petclinic.convertor.ModelDTOConvertor;
+import com.petclinic.dto.SpecialtyDTO;
 import com.petclinic.model.Specialty;
 import com.petclinic.repository.sdjpa.SpecialtyRepositorySDJPA;
 
@@ -30,32 +32,42 @@ public class SpecialtyServiceTestSDJPA {
 
 	@InjectMocks
 	SpecialtyServiceSDJPA service;
+	
+	@Mock
+    private ModelDTOConvertor convertor1;
+    
+    private ModelDTOConvertor convertor;
 
-	Specialty sp1;
-	Specialty sp2;
-	List<Specialty> sps;
+	Specialty specialty1;
+	Specialty specialty2;
+	
+	SpecialtyDTO specialtyDTO1;
+	SpecialtyDTO specialtyDTO2;
 
 	@BeforeEach
 	void setUp() {
+		
+		convertor = new ModelDTOConvertor();
 
-		sp1 = new Specialty();
-		sp1.setId(1l);
-
-		sp2 = new Specialty();
-		sp2.setId(2l);
-
-		sps = new ArrayList<>();
-		sps.add(sp1);
-		sps.add(sp2);
-
+		specialty1 = Specialty.builder().id(1l).name("specialtyName1").build();
+		specialty2 = Specialty.builder().id(2l).name("specialtyName2").build();
+		
+		specialtyDTO1 = convertor.convert(specialty1);
+		specialtyDTO2 = convertor.convert(specialty2);
 	}
 
 	@Test
 	public void findAll() {
+		
+		List<Specialty> specialties = new ArrayList<>();
+		specialties.add(specialty1);
+		specialties.add(specialty2);
+		
+		when(convertor1.convert(any(Specialty.class))).thenReturn(specialtyDTO1);
 
-		when(repository.findAll()).thenReturn(sps);
+		when(repository.findAll()).thenReturn(specialties);
 
-		List<Specialty> returnedsps = service.findAll();
+		List<SpecialtyDTO> returnedsps = service.findAll();
 
 		assertNotNull(returnedsps);
 		assertEquals(2, returnedsps.size());
@@ -63,10 +75,12 @@ public class SpecialtyServiceTestSDJPA {
 
 	@Test
 	public void findById() {
+		
+		when(convertor1.convert(any(Specialty.class))).thenReturn(specialtyDTO1);
 
-		when(repository.findById(anyLong())).thenReturn(Optional.of(sp1));
+		when(repository.findById(anyLong())).thenReturn(Optional.of(specialty1));
 
-		Specialty sp = service.findById(1L);
+		SpecialtyDTO sp = service.findById("1");
 
 		assertNotNull(sp);
 	}
@@ -74,18 +88,25 @@ public class SpecialtyServiceTestSDJPA {
 	@Test
 	public void save() {
 		
-		when(repository.save(any())).thenReturn(sp1);
+		when(convertor1.convert(any(SpecialtyDTO.class))).thenReturn(specialty1);
 		
-		Specialty sp = service.save(sp1);
+		when(convertor1.convert(any(Specialty.class))).thenReturn(specialtyDTO1);
+		
+		when(repository.save(any())).thenReturn(specialty1);
+		
+		SpecialtyDTO sp2 = service.save(specialtyDTO1);
 				
-		assertNotNull(sp);
+		assertNotNull(sp2);
 
         verify(repository).save(any());		
 	}
 	
     @Test
     void delete() {
-    	service.delete(sp1);
+    	
+    	when(convertor1.convert(any(SpecialtyDTO.class))).thenReturn(specialty1);
+    	
+    	service.delete(specialtyDTO1);
 
         //default is 1 times
         verify(repository, times(1)).delete(any());
@@ -93,7 +114,8 @@ public class SpecialtyServiceTestSDJPA {
 
     @Test
     void deleteById() {
-    	service.deleteById(1L);
+    	
+    	service.deleteById("1");
 
         verify(repository).deleteById(anyLong());
     }

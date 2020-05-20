@@ -16,14 +16,19 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 //@ToString
 
 @Entity
@@ -40,6 +45,7 @@ public class Owner extends Person {
     private String telephone;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner"/*, fetch = FetchType.LAZY*/)
+    @Builder.Default
     private Set<Pet> pets = new HashSet<>();
 
 

@@ -2,10 +2,10 @@ package com.petclinic.service;
 
 import java.util.List;
 
-import com.petclinic.model.Visit;
+import com.petclinic.dto.VisitDTO;
 
-public interface VisitService extends CrudService<Visit, Long> {
+public interface VisitService extends CrudService<VisitDTO, String> {
 
-	List<Visit> findVisitsByPetId(Long petId);
+	List<VisitDTO> findVisitsByPetId(Long petId);
 
 }
