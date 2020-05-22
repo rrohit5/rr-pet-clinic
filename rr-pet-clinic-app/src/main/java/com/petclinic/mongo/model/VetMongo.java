@@ -5,9 +5,6 @@ import java.util.Set;
 
 import javax.persistence.Id;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +19,7 @@ import lombok.ToString;
 @Builder
 @ToString
 
-@Document
+//@Document
 public class VetMongo {
 	
 	@Id
@@ -30,7 +27,7 @@ public class VetMongo {
     private String firstName;
     private String lastName;
     
-    @DBRef
+//    @DBRef
     @Builder.Default
 	private Set<SpecialtyMongo> specialties = new HashSet<>();
 

@@ -2,7 +2,10 @@ package com.petclinic.controller;
 
 import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -101,5 +104,19 @@ public class VisitController {
 
             return "redirect:/owners/{ownerId}";
         }
+    }
+    
+    @GetMapping(value = "/owners/*/pets/{petId}/visits")
+    public String showVisits(@PathVariable String petId, Map<String, Object> model) {
+    	
+    	PetDTO petDTO = petService.findById(petId);
+    	
+    	Set<VisitDTO> vsisitDTOs = petDTO.getVisits();
+    	
+    	List<VisitCommand> visitCommands = vsisitDTOs.stream().map(p -> convertor.convert(p)).collect(Collectors.toList());  
+    	
+        model.put("visits", visitCommands);
+        
+        return "visitList";
     }
 }

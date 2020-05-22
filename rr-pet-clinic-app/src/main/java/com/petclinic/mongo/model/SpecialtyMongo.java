@@ -2,8 +2,6 @@ package com.petclinic.mongo.model;
 
 import javax.persistence.Id;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +16,7 @@ import lombok.ToString;
 @Builder
 @ToString
 
-@Document
+//@Document
 public class SpecialtyMongo {
 	
 	@Id

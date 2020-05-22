@@ -24,6 +24,7 @@ import com.petclinic.service.OwnerService;
 @RequestMapping("/owners")
 @Controller
 public class OwnerController {
+	
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
 
     private final OwnerService ownerService;
@@ -39,16 +40,6 @@ public class OwnerController {
         dataBinder.setDisallowedFields("id");
     }
 
-//	@RequestMapping({"/owners", "/owners/index", "/owners/index.html"})
-//	@RequestMapping({"", "/", "/index", "/index.html"})  //@RequestMapping at class level + this one
-//														 // need to add ""
-//	public String listOwners(Model model) {
-//		
-//		model.addAttribute("owners", ownerService.findAll());
-//		
-//		return "owners/index";
-//	}
-    
     
     
     
@@ -98,11 +89,7 @@ public class OwnerController {
 
         // find owners by last name
 //        List<OwnerDTO> results = ownerService.findByLastName(ownerCommand.getLastName());
-        List<OwnerDTO> results = 
-        		
-        		//ownerService.findAll();
-        		
-        		ownerService.findAllByLastNameLike("%"+ ownerCommand.getLastName() + "%");
+        List<OwnerDTO> results = ownerService.findAllByLastNameLike("%"+ ownerCommand.getLastName() + "%");
 
         if (results.isEmpty()) {
         	
@@ -150,6 +137,8 @@ public class OwnerController {
         	
             ownerDTO.setId(ownerId);
             OwnerDTO savedOwner = ownerService.save(ownerDTO);
+            
+//            return "redirect:/owners/{ownerId}";
             return "redirect:/owners/" + savedOwner.getId();
             
         }

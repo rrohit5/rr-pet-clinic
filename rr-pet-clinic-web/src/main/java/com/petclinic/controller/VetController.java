@@ -29,7 +29,8 @@ public class VetController {
         
     }
 
-    @RequestMapping({"/vets", "/vets/index", "/vets/index.html", "/vets.html"})
+//    @RequestMapping({"/vets", "/vets/index", "/vets/index.html", "/vets.html"})
+    @RequestMapping({"/vets", "/vets.html"})
     public String showVetList(Model model){
 
     	List<VetDTO> vetDTOs = vetService.findAll();
@@ -40,7 +41,7 @@ public class VetController {
     	
         model.addAttribute("vets", vetCommands);
 
-        return "vets/index";
+        return "vets/vetList";
     }
 
     @GetMapping({ "/vets.json", "/vets.xml"})

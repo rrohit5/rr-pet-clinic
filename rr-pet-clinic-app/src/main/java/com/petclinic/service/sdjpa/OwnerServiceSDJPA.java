@@ -38,8 +38,11 @@ public class OwnerServiceSDJPA implements OwnerService {
     @Override
     public List<OwnerDTO> findAllByLastNameLike(String lastName) {
     	
-        return ownerRepository.findAllByLastNameLike(lastName)
-        		.stream().map((p) -> convertor.convert(p)).collect(Collectors.toList());
+    	List<Owner> owners = ownerRepository.findAllByLastNameLike(lastName);
+    	
+    	List<OwnerDTO> ownerDTOList = owners.stream().map((p) -> convertor.convert(p)).collect(Collectors.toList());
+    	
+        return ownerDTOList;
     }
 
     @Override

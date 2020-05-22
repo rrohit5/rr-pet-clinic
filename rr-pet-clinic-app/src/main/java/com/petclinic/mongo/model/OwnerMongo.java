@@ -6,7 +6,6 @@ import java.util.Set;
 import javax.persistence.Id;
 
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +21,7 @@ import lombok.Setter;
 @Builder
 //@ToString
 
-@Document
+//@Document
 public class OwnerMongo{
 	
 	@Id

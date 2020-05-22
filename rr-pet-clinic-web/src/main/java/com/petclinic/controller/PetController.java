@@ -80,7 +80,7 @@ public class PetController {
     }
     
     
-//    @InitBinder("petDTO")
+//    @InitBinder("pet")
 //    public void initPetBinder(WebDataBinder dataBinder) {
 //        dataBinder.setValidator(new PetValidator());
 //    }
@@ -163,6 +163,7 @@ public class PetController {
         	ownerDTO.addPet(petDTO);
             petService.save(petDTO);
             
+//            return "redirect:/owners/{ownerId}";
             return "redirect:/owners/" + ownerCommand.getId();
         }
     }

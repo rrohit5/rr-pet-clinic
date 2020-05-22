@@ -34,4 +34,8 @@ public class VetCommand {
     public void addSpecialty(SpecialtyCommand specialty) {
 		getSpecialties().add(specialty);
 	}
+    
+    public int getNrOfSpecialties() {
+		return getSpecialties().size();
+	}
 }

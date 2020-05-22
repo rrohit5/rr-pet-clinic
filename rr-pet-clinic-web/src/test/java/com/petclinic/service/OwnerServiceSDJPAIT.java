@@ -1,10 +1,11 @@
 package com.petclinic.service;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,11 +62,12 @@ class OwnerServiceSDJPAIT {
 	}
 
 	@Test
+	@Transactional
 	void testFindAll() {
 
-//		List<OwnerDTO> dto = ownerService.findAll();
+		List<OwnerDTO> dto = ownerService.findAll();
 		
-//		assertTrue(dto.size() > 0);
+		assertTrue(dto.size() > 0);
 	}
 
 	@Test
